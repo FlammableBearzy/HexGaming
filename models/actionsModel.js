@@ -6,7 +6,7 @@ module.export.getAllMoveActions = async function() {
         let result = await pool.query(sql);
         let cards = result.rows;
 
-        return { status: 200, result: cards };
+        return { status: 200, result: moveAction };
     } catch (err) {
         console.log(err);
         return { status: 500, result: err};
@@ -19,7 +19,7 @@ module.export.getAllAttackActions = async function(){
         let result = await pool.query(sql);
         let cards = result.rows;
 
-        return{ status: 200, result: cards};
+        return{ status: 200, result: attackAction };
     } catch (err) {
         console.log(err);
         return { status: 500, result: err};
