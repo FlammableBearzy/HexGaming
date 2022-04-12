@@ -1,10 +1,10 @@
 var pool = require('./connection.js')
 
-module.export.getAllMoveActions = async function() {
+module.exports.getAllMoveActions = async function() {
     try {
         let sql = `Select * from moveActions`;
         let result = await pool.query(sql);
-        let cards = result.rows;
+        let moveAction = result.rows;
 
         return { status: 200, result: moveAction };
     } catch (err) {
@@ -13,11 +13,11 @@ module.export.getAllMoveActions = async function() {
     }
 }
 
-module.export.getAllAttackActions = async function(){
+module.exports.getAllAttackActions = async function(){
     try {
         let sql = `Select * from attackAction`;
         let result = await pool.query(sql);
-        let cards = result.rows;
+        let attackAction = result.rows;
 
         return{ status: 200, result: attackAction };
     } catch (err) {
