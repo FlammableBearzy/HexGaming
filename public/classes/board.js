@@ -10,7 +10,9 @@ class boardParcel{
   }
 
   builder() {
+    fill("White");
     rect(this.x,this.y,this.w, this.h);
+    fill("Black");
     text(this.parcelId, this.centerx, this.centery, 40)
   }
 }
