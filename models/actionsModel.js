@@ -2,7 +2,7 @@ var pool = require('./connection.js')
 
 module.exports.getAllMoveActions = async function() {
     try {
-        let sql = `Select * from moveActions`;
+        let sql = `Select * from moveAction`;
         let result = await pool.query(sql);
         let moveAction = result.rows;
 

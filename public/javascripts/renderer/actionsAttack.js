@@ -1,3 +1,6 @@
+var ActionID = [];
+var ActionName = [];
+
 const imgCenterVertical = 0.4;
 const imgRelWidth = 0.6;
 const textCenterVertical = 0.8;
@@ -6,7 +9,7 @@ const textCenterVertical = 0.8;
 class Attacks {
     AttackPlayed = false;
 
-    static attackImage = {};
+    //static attackImage = {};
     constructor(width, height, x, y, cooldown, action){
         this.width = width;
         this.height = height;
@@ -15,6 +18,19 @@ class Attacks {
         this.cooldown = cooldown;
         this.action = action;
     };
+
+    static async preloadImages()
+    {
+        let actionImg = {}
+        let action = await getActions();
+        for (let i of action)
+        {
+            let ActionID = i.att_action_id;
+            let ActionName = i.att_action_name;
+            actionImg[ActionName, ActionID] = loadImage('./images/' + ActionName + ActionID + '.png');
+        }
+        Attacks.initImgs(actionImg)
+    } 
 
     static initImgs(imgHash){
         Attacks.attackImage = imgHash;
@@ -35,17 +51,19 @@ class Attacks {
     };
     
     draw() {
+        //console.log("ActionAttack Drawn Called")
         fill(100,100,100);
         stroke(0,0,0);     
         rect (this.x,this.y,this.width,this.height,5,5,5,5);
 
-        if (this.card){
+        if (Attacks.action){
             ImageMode(CENTER)
-            console.log(this.action);
-            let img = Attacks.attackImage[this.action]
+            console.log(this.action + "  Attack Action");
+            //let img = Attacks.attackImage[this.action]
             console.log (Attacks.attackImage[this.action])
             let ratio = (this.width * imgRelWidth) / img.width;
-            Image(img, this.x + this.width/2, this.y + this.height * imgCenterVertical, this.width * imgRelWidth, img.height * ratio);
+            //Image(img, this.x + this.width/2, this.y + this.height * imgCenterVertical, this.width * imgRelWidth, img.height * ratio);
+            rect(10,10,10)
             fill(0, 0, 0);
             textAlig(CENTER, CENTER);
             text(this.action, this.x + this.width/2, this.y + this.height * textCenterVertical);
