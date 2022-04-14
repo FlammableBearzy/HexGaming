@@ -10,7 +10,9 @@ class boardParcel{
   }
 
   builder() {
+    fill("White");
     rect(this.x,this.y,this.w, this.h);
+    fill("Black");
     text(this.parcelId, this.centerx, this.centery, 40)
   }
 }
@@ -22,7 +24,7 @@ class board{
       let i = 1;
       for (let y = 1; y <= sizeY; y++){
         for (let x = 1; x <= sizeX; x++ ){
-              let bp = new boardParcel(squareSize* x,squareSize *y,squareSize,squareSize, i)
+              let bp = new boardParcel((squareSize* x - squareSize) + windowWidth/2 - (sizeX*squareSize)/2,(squareSize* y - squareSize) + windowHeight/2 - (sizeY*squareSize)/2,squareSize,squareSize, i)
               bp.builder()
               board[i] = bp;
               i++;
