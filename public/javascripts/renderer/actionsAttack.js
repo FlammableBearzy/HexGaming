@@ -16,7 +16,12 @@ class Attacks {
         this.x = x;
         this.y = y;
         this.cooldown = cooldown;
-        this.action = action;
+        for ( i of action)
+        {
+            let ActionID = i.att_action_id;
+            let ActionName = i.att_action_name;
+            this.action = action[ActionName, ActionID]
+        }
     };
 
     static async preloadImages()
@@ -50,12 +55,13 @@ class Attacks {
         }
     };
     
-    draw() {
-        //console.log("ActionAttack Drawn Called")
+    pepo() {
+        console.log("ActionAttack Drawn Called")
         fill(100,100,100);
         stroke(0,0,0);     
         rect (this.x,this.y,this.width,this.height,5,5,5,5);
-
+        console.log (this.action);
+        /*
         if (Attacks.action){
             ImageMode(CENTER)
             console.log(this.action + "  Attack Action");
@@ -68,6 +74,7 @@ class Attacks {
             textAlig(CENTER, CENTER);
             text(this.action, this.x + this.width/2, this.y + this.height * textCenterVertical);
         }
+        */
     };
 
     setAction(action)

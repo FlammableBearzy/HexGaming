@@ -10,6 +10,6 @@ function setup() {
 function draw() {
     background(100);
     //console.log("Card People being drawn");
-    //Attacks[1].draw();
+    Attacks.pepo();
     //cardWaman.draw();
 }
