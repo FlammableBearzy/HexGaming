@@ -11,7 +11,7 @@ module.exports.getAllMoveActions = async function() {
         console.log(err);
         return { status: 500, result: err};
     }
-}
+};
 
 module.exports.getAllAttackActions = async function(){
     try {
@@ -24,4 +24,4 @@ module.exports.getAllAttackActions = async function(){
         console.log(err);
         return { status: 500, result: err};
     }
-}  
+}; 
