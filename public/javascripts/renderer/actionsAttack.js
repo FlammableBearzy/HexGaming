@@ -1,4 +1,6 @@
 let ActionID;
+let ActionName;
+let ActionCooldown;
 
 const imgCenterVertical = 0.4;
 const imgRelWidth = 0.6;
@@ -22,9 +24,8 @@ class Attacks {
         for (let i of action)
         {
             ActionID = i.att_action_id;
-            let ActionName = i.att_action_name;
-            //ActionID.push(ActionID);
-            //ActionName.push(ActionName);
+            ActionName = i.att_action_name;
+            ActionCooldown = i.att_action_cooldown;
             attackImage[ActionID] = loadImage('./images/' + ActionName + ActionID + '.png');
         }
         Attacks.initImgs(attackImage);
@@ -32,20 +33,6 @@ class Attacks {
 
     static initImgs(imgHash){
         Attacks.attackImage = imgHash;
-    };
-
-    updateCooldown(cooldown)
-    {
-        this.cooldown = cooldown;
-        
-        if(AttackPlayed == true)
-        {
-            cooldown--;
-        }
-        if(cooldown == 0)
-        {
-            AttackPlayed == false;
-        }
     };
     
     pepo() {
@@ -59,13 +46,14 @@ class Attacks {
             {
                 imageMode(CENTER);
                 let img = Attacks.attackImage[this.action];
+                let offsetX = this.width / 2;
+                let offsetY = this.height / 2;
                 //console.log(Attacks.attackImage[this.action]);
-                let ratio = (this.width * imgRelWidth) / img.width;
-                image(img,this.x + this.width * (this.action - 1/2) * 3/4, this.y+this.height*imgCenterVertical, this.width*imgRelWidth,img.height*ratio);
+                //let ratio = (this.width * imgRelWidth) / img.width;
+                image(img,this.x +(this.action * 1/2) + offsetX, this.y + this.height - offsetY, this.width, this.height);
                 fill(0,0,0);
                 //textAlign(CENTER,CENTER);
                 //text(this.card,this.x+this.width/2,this.y+this.height*textCenterVertical);
-                
             }
         }
         else {
@@ -75,6 +63,7 @@ class Attacks {
 
     setAction(action)
     {
+        //this.cooldown = att_action_cooldown;
         this.action = action;
     };
 
@@ -85,7 +74,33 @@ class Attacks {
 
     clicked(x, y)
     {
-        return (x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height));
-        console.log("You pressed this " + this.action);
+        if(x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height))
+        {
+            console.log("You pressed this " + this.action);
+
+            if (this != undefined)
+            {
+                this.cooldown--;
+                if (this.cooldown == -1)
+                {
+                    this.cooldown = 8;
+                }
+                console.log(this.cooldown);
+                //console.log(att_action_cooldown);
+                return;
+            }
+
+        }
+        
     };
+
+    updateCooldown(cooldown)
+    {
+        this.cooldown = cooldown;
+        
+        let ClickUpdate;
+
+        //if (this != undefined && Attacks.attackImage != undefined)
+    };
+
 }

@@ -9,8 +9,8 @@ let card3;
 function preload() {
     Attacks.preloadImages();
     card1 = new Attacks(100,100,0,0,8,1);
-    card2 = new Attacks(100,100,0,0,8,2);
-    card3 = new Attacks(100,100,0,0,8,3);
+    card2 = new Attacks(100,100,100,0,8,2);
+    card3 = new Attacks(100,100,200,0,8,3);
 }
 
 function setup() {
@@ -25,4 +25,11 @@ function draw() {
     card2.pepo();
     card3.pepo();
     //cardWaman.draw();
+}
+
+function mouseClicked()
+{
+    card1.clicked(mouseX, mouseY);
+    card2.clicked(mouseX, mouseY);
+    card3.clicked(mouseX, mouseY);
 }
