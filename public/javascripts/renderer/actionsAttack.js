@@ -86,6 +86,7 @@ class Attacks {
                     this.cooldown = 8;
                 }
                 console.log(this.cooldown);
+                //This currently has an error of undefined.
                 //console.log(att_action_cooldown);
                 return;
             }
