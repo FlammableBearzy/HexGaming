@@ -2,72 +2,46 @@ const movImgCenterVertical = 0.4;
 const movImgRelWidth = 0.6;
 const movTextCenterVertical = 0.8;
 
+let actionId;
+let parcel;
+
 class Movement {
-    //AttackPlayed = false;
-
-    //static movementImage = {};
-    constructor(width, height, x, y, cooldown, action){
-        this.width = width;
-        this.height = height;
-        this.x = x;
-        this.y = y;
-        this.cooldown = cooldown;
-        this.action = action;
-    };
-
-    static initImgs(imgHash){
-        Movement.movementImage = imgHash;
-    };
-/*
-    updateCooldown(cooldown)
+    constructor(id){
+        this.id = id;
+    }
+    static async getCurrentParcel()
     {
-        this.cooldown = cooldown;
-        
-        if(AttackPlayed == true)
+        let action = await getActions();
+        for (let i of action)
         {
-            cooldown--;
+            actionId = i.mov_player_id;
+            parcel = i.mov_parcel;
+        }        
+    }; 
+    
+    movement(board, arrows,player, canClick){
+        let upArrow = arrows[0];
+        let downArrow = arrows[1];
+        let leftArrow = arrows[2];
+        let rightArrow = arrows[3];
+        let newBoard = board;
+        if(upArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
+          player[this.id].playerPlacer(newBoard[player[this.id].parcel.parcelId - boardWidth]);
+          return false;
         }
-        if(cooldown == 0)
-        {
-            AttackPlayed == false;
+        if(rightArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)&& (player[this.id].parcel.parcelId) % boardWidth != 0){
+          player[this.id].playerPlacer(newBoard[player[this.id].parcel.parcelId + 1]);
+          return false;
         }
-    };
-*/    
-    draw() {
-        //console.log("MovementAttack Drawn Called")
-        fill(100,100,100);
-        stroke(0,0,0);     
-        rect (this.x,this.y,this.width,this.height,5,5,5,5);
-        console.log(this.action + "  Movement Action");
-        if (this.action){
-            //ImageMode(CENTER)
-            console.log(this.action);
-            //let img = Movement.attackImage[this.action]
-            //console.log (Movement.attackImage[this.action])
-            let ratio = (this.width * movImgRelWidth) / img.width;
-            //Image(img, this.x + this.width/2, this.y + this.height * movmovImgCenterVertical, this.width * movImgRelWidth, img.height * ratio);
-            fill(0, 0, 0);
-            textAlig(CENTER, CENTER);
-            text(this.action, this.x + this.width/2, this.y + this.height * movTextCenterVertical);
+        if(leftArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed) && (player[this.id].parcel.parcelId - 1) % boardWidth != 0){
+          player[this.id].playerPlacer(newBoard[player[this.id].parcel.parcelId - 1]);
+          return false;
         }
-    };
+        if(downArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
+          player[this.id].playerPlacer(newBoard[player[this.id].parcel.parcelId + boardWidth]);
+          return false;
+        }
+      }
 
-    setAction(action)
-    {
-        this.action = action;
-        console.log(action)
-    };
-
-    getAction()
-    {
-        return this.action;
-        console.log(this.action)
-    };
-
-    /*
-    clicked(x, y)
-    {
-        return (x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height));
-    };
-    */
+    
 }

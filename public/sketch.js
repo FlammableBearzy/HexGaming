@@ -13,10 +13,12 @@ let playerRoomId = 0;
 
 
 //buttons
+let movementButtonArray = [];
 let upArrow;
 let downArrow;
 let leftArrow;
 let rightArrow;
+let movementClass;
 
 let canClick = true;
 
@@ -30,12 +32,16 @@ function setup() {
 
   player.push (new playerCreator(newBoard[1], 150, "Blue"));
   player.push(new playerCreator(newBoard[18], 150, "Red"));
+  movementClass = new Movement(playerRoomId);
 
   upArrow = new button("Up", 100,100,100,50,null);
   downArrow = new button("Down", 200,100,100,50,null);
   leftArrow = new button("Left", 300,100,100,50,null);
   rightArrow = new button("Right", 400,100,100,50,null);
-  
+  movementButtonArray.push(upArrow);
+  movementButtonArray.push(downArrow);
+  movementButtonArray.push(leftArrow);
+  movementButtonArray.push(rightArrow);
 
   traps.push(new boardTrap(newBoard[7],1,1))
   traps.push(new boardTrap(newBoard[8],1,1))
@@ -55,38 +61,25 @@ function draw() {
 
   player[0].playerPlacer();
   player[1].playerPlacer();
-  
 
-
-  movement();
-  if(mouseIsPressed == false){
-    canClick = true};
-    
-  
-}
-
-
-function movement(){
   upArrow.buttonBuilder()
   downArrow.buttonBuilder()
   rightArrow.buttonBuilder()
   leftArrow.buttonBuilder()
   
-  if(upArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
-    player[playerRoomId].playerPlacer(newBoard[player[playerRoomId].parcel.parcelId - boardWidth]);
-    canClick = false;
+
+
+  canClick = movementClass.movement(newBoard, movementButtonArray, player,canClick);
+  if (canClick == false){
+    console.log("Hehhehe");
   }
-  if(rightArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)&& (player[playerRoomId].parcel.parcelId) % boardWidth != 0){
-    player[playerRoomId].playerPlacer(newBoard[player[playerRoomId].parcel.parcelId + 1]);
-    canClick = false;
+  if(mouseIsPressed == false){
+    canClick = true};
   }
-  if(leftArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed) && (player[playerRoomId].parcel.parcelId - 1) % boardWidth != 0){
-    player[playerRoomId].playerPlacer(newBoard[player[playerRoomId].parcel.parcelId - 1]);
-    canClick = false;
-  }
-  if(downArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
-    player[playerRoomId].playerPlacer(newBoard[player[playerRoomId].parcel.parcelId + boardWidth]);
-    canClick = false;
-  }
-}
+  
+
+
+
+
+
 
