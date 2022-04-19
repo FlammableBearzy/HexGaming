@@ -34,6 +34,8 @@ class Attacks {
     static initImgs(imgHash){
         Attacks.attackImage = imgHash;
     };
+
+
     
     pepo() {
         //console.log("ActionAttack Drawn Called")
@@ -78,8 +80,11 @@ class Attacks {
         {
             console.log("You pressed this " + this.action);
 
-            if (this != undefined)
+            if (this != undefined && ActionCooldown != undefined)
             {
+                console.log(ActionCooldown);
+                
+                ActionCooldown = this.cooldown;
                 this.cooldown--;
                 if (this.cooldown == -1)
                 {

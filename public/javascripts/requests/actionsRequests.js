@@ -13,3 +13,12 @@ async function getActions()
         console.log(err);
     }
 };
+/*
+async function postMove(roomId, playerId)
+{
+    try{
+        const response = await fetch(`/api/rooms/${roomId}/move`)
+
+    }
+};
+*/

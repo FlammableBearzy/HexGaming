@@ -10,7 +10,7 @@ function preload() {
     Attacks.preloadImages();
     card1 = new Attacks(100,100,0,0,8,1);
     card2 = new Attacks(100,100,100,0,8,2);
-    card3 = new Attacks(100,100,200,0,8,3);
+    card3 = new Attacks(100,100,200,0,15,3);
 }
 
 function setup() {

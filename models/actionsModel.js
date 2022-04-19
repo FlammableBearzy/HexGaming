@@ -12,7 +12,14 @@ module.exports.getAllMoveActions = async function() {
         return { status: 500, result: err};
     }
 };
-
+/*
+module.exports.postAllMoveActions = async function() {
+    try {
+        let sqlr = `UPDATE moveAction SET mov_action_parselId WHERE mov_player_id = $`
+        let result = await pool.query(sqlr, [player_id])
+    }
+};
+*/
 module.exports.getAllAttackActions = async function(){
     try {
         let sql = `Select * from attackAction`;
