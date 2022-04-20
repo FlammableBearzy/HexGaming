@@ -6,6 +6,8 @@ let attack = [];
 let card1;
 let card2;
 let card3;
+
+let testing;
 function preload() {
     Attacks.preloadImages();
     card1 = new Attacks(100,100,0,0,8,1);
@@ -15,6 +17,7 @@ function preload() {
 
 function setup() {
     var canvas = createCanvas(width, height);
+    kekw();
     //card.pepo();
 }
 
@@ -24,6 +27,8 @@ function draw() {
     card1.pepo();
     card2.pepo();
     card3.pepo();
+
+    console.log(testing);
     //cardWaman.draw();
 }
 
@@ -32,4 +37,9 @@ function mouseClicked()
     card1.clicked(mouseX, mouseY);
     card2.clicked(mouseX, mouseY);
     card3.clicked(mouseX, mouseY);
+}
+
+async function kekw()
+{
+    testing = await play(1, 10);
 }
