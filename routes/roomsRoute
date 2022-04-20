@@ -1,2 +1,20 @@
 var express = require('express');
 var router = express.Router();
+var rModel = require("../models/roomsModel");
+
+
+router.get('/', async function(req, res, next){
+    let result = await rModel.getAllRooms();
+    res.status(result.status).send(result.result);
+});
+
+router.post('/1/plays', async function(req, res, next) {
+    let playerID = req.body.playerID;
+    let parselID = req.body.parselID;
+    console.log(`Played ${playerID} on parsel ${parselID}`);
+    let result = await rModel.play(playerID, parselID);
+    res.status(result.status).send(result.result);
+});
+
+module.exports = router;
+

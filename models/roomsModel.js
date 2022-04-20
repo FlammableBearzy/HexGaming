@@ -3,7 +3,7 @@ var pool = require('./connection.js');
 
 module.exports.getAllRooms = async function(){
     try{
-        let sql = `Select room_id, room_name, room_state, room_player_id, room_game_id`;
+        let sql = `Select * from room`;
         let result = await pool.query(sql);
         let rooms = result.rows;
 
@@ -19,8 +19,7 @@ module.exports.getAllRooms = async function(){
         };
     }
 }
-
-
+/*
 module.exports.getRoomsByID = async function (id) {
     try {
         let sql = `Select room_id, room_name, room_state and room_id = $1`;
@@ -34,5 +33,25 @@ module.exports.getRoomsByID = async function (id) {
     } catch (err) {
         console.log(err);
         return { status: 500, result: err};
+    }
+};
+*/
+module.exports.play = async function (player, parsel) {
+    try{
+        if(!parseInt(player) && !parseInt(parseInt))
+        {
+            console.log("This player: " + player + " and this parsel: " + parsel);
+            return {
+                status: 400,
+                result: { msg: "This player: " + player + ", This parsel: " + parsel}
+            };
+        }
+
+        let sqlU = "UPDATE moveAction SET mov_action_parselId = $1 WHERE mov_player_id = $2";
+        let resultU = await pool.query(sqlU, [player, parsel]);
+
+    } catch (err) {
+        console.log(err);
+        return { status: 500, result: err };
     }
 }
