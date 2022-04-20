@@ -9,13 +9,16 @@ class Movement {
     constructor(id){
         this.id = id;
     }
-    static async getCurrentParcel()
+    static async GetCurrentParcel(id)
     {
         let action = await getActions();
         for (let i of action)
         {
-            actionId = i.mov_player_id;
+          if(i.mov_player_id == id)
+          {
             parcel = i.mov_parcel;
+            return parcel;
+          }
         }        
     }; 
     
@@ -42,6 +45,8 @@ class Movement {
           return false;
         }
       }
+
+    
 
     
 }
