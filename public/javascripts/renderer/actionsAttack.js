@@ -25,7 +25,6 @@ class Attacks {
         {
             ActionID = i.att_action_id;
             ActionName = i.att_action_name;
-            ActionCooldown = i.att_action_cooldown;
             attackImage[ActionID] = loadImage('./images/' + ActionName + ActionID + '.png');
         }
         Attacks.initImgs(attackImage);
@@ -35,6 +34,35 @@ class Attacks {
         Attacks.attackImage = imgHash;
     };
 
+    static async actionsCooldown()
+    {
+        /*
+        let action = await getActions();
+        for (let i of action)
+        {
+            ActionCooldown = i.att_action_cooldown;
+            // temp = i.att_action_cooldown;
+            // console.log("Pepo1" + ActionID);
+            // ActionaCooldown = this.cooldown;
+            // this.cooldown = cooldown
+            console.log("Pepo2" + ActionID);
+        }
+
+        if (this != undefined && ActionCooldown != undefined)
+        {
+
+            console.log(ActionCooldown);
+            // cooldown--;
+            // if (cooldown == -1)
+            // {
+            //     cooldown = temp;
+            // }
+            // console.log(this.cooldown);
+            return;
+        }
+        */
+        //return 1;
+    }
 
     
     pepo() {
@@ -78,24 +106,10 @@ class Attacks {
     {
         if(x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height))
         {
-            console.log("You pressed this " + this.action);
-
-            if (this != undefined && ActionCooldown != undefined)
-            {
-                console.log(ActionCooldown);
-                
-                ActionCooldown = this.cooldown;
-                this.cooldown--;
-                if (this.cooldown == -1)
-                {
-                    this.cooldown = 8;
-                }
-                console.log(this.cooldown);
-                //This currently has an error of undefined.
-                //console.log(att_action_cooldown);
-                return;
-            }
-
+            //if(actionsCooldown() != undefined)
+            //{
+                actionsCooldown();
+            //}
         }
         
     };

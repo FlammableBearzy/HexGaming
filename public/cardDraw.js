@@ -10,14 +10,14 @@ let card3;
 let testing;
 function preload() {
     Attacks.preloadImages();
-    card1 = new Attacks(100,100,0,0,8,1);
-    card2 = new Attacks(100,100,100,0,8,2);
-    card3 = new Attacks(100,100,200,0,15,3);
+    card1 = new Attacks(100,100,0,0,6,1);
+    card2 = new Attacks(100,100,100,0,6,2);
+    card3 = new Attacks(100,100,200,0,10,3);
 }
 
 function setup() {
     var canvas = createCanvas(width, height);
-    kekw();
+    //kekw();
     //card.pepo();
 }
 
@@ -28,7 +28,7 @@ function draw() {
     card2.pepo();
     card3.pepo();
 
-    console.log(testing);
+    //console.log(testing);
     //cardWaman.draw();
 }
 

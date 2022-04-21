@@ -20,13 +20,13 @@ module.exports.getAllRooms = async function(){
     }
 }
 /*
-module.exports.getRoomsByID = async function (id) {
+module.exports.getGameByID = async function (id) {
     try {
-        let sql = `Select room_id, room_name, room_state and room_id = $1`;
+        let sql = `Select room_id, room_name, room_state, room_player1_id, room_player2_id, room_game_id from room, room where room_game_id = $1`;
         let result = await pool.query(sql, [id]);
         if (result.rows.length > 0){
-            let room = result.rows[0];
-            return { status: 200, result: room};
+            let game = result.rows[0];
+            return { status: 200, result: game};
         } else {
             return { status: 404, result: { msg: "No room with that id"} };
         }
@@ -36,7 +36,7 @@ module.exports.getRoomsByID = async function (id) {
     }
 };
 */
-module.exports.play = async function (player, parsel) {
+module.exports.play = async function (player, parsel, promise) {
     try{
         if(!parseInt(player) && !parseInt(parseInt))
         {
@@ -47,11 +47,36 @@ module.exports.play = async function (player, parsel) {
             };
         }
 
-        let sqlU = "UPDATE moveAction SET mov_action_parselId = $1 WHERE mov_player_id = $2";
+        let sqlU = "UPDATE moveAction SET mov_action_parselId = $2 WHERE mov_player_id = $1;";
+        console.log(player);
+        console.log(parsel);
         let resultU = await pool.query(sqlU, [player, parsel]);
+            console.log(resultU);
+       if(resultU == undefined)
+        {
+            return {
+                status : 404,
+                result : {msg : "Something is missing"}
+            };
+        }
 
+        if (resultU.rowCount == 0)
+        {
+            return {
+
+                status : 500,
+                result : {msg : "The updated failed"}
+            };
+        }
+        return {
+            status: 200,
+            result: {
+                msg: "You posted!"
+            }
+          };
+        //let resultU = await pool.query(sqlU, [player, parsel],(arg) => promise(arg));
     } catch (err) {
         console.log(err);
-        return { status: 500, result: err };
+        return { status: 420, result: err };
     }
 }
