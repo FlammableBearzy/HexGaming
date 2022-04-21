@@ -1,5 +1,6 @@
+
 class button{
-    constructor(text,x,y,w,h,sprite){
+    constructor(text,x,y,w,h,player){
         this.text = text;
         this.x = x;
         this.y = y;
@@ -7,7 +8,8 @@ class button{
         this.h = h;
         this.centerx = x + w/2;
         this.centery = y + h/2;
-        this.sprite = sprite;
+        this.player = player;
+        
     }
     
     buttonBuilder(){
@@ -20,6 +22,7 @@ class button{
     }
     clicker(mouseX, mouseY, is_Clicked){
         if((mouseX > this.x && mouseX < this.x + this.w) && (mouseY > this.y && mouseY < this.y + this.h) && is_Clicked){
+            turnsClass.nextTurn();
             return true;
         } else {return false;}
     }

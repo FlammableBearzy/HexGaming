@@ -9,7 +9,6 @@ let traps = [];
 
 //player
 let player = [];
-let playerId = 1;
 let playerRoomId = 0;
 
 
@@ -28,6 +27,9 @@ let reset;
 
 let canClick = true;
 
+//turn
+let turnsClass;
+
 
 function setup() {
   
@@ -35,23 +37,29 @@ function setup() {
   boardClass = new board();
   
   newBoard = boardClass.createBoard(boardWidth,boardHeight,200);
+  
+  
 
-  player.push (new playerCreator(newBoard[1], 150, "Blue"));
-  player.push(new playerCreator(newBoard[18], 150, "Red"));
-  movementClass = new Movement(playerRoomId);
+  player.push (new playerCreator(newBoard[1], 150, "Blue",0));
+  player.push(new playerCreator(newBoard[18], 150, "Red", 1));
+  turnsClass = new turn(200,100, 100, player);
 
-  upArrow = new button("Up", 100,100,100,50,null);
-  downArrow = new button("Down", 200,100,100,50,null);
-  leftArrow = new button("Left", 300,100,100,50,null);
-  rightArrow = new button("Right", 400,100,100,50,null);
+  
+
+  movementClass = new Movement(player[playerRoomId].id, turnsClass);
+
+  upArrow = new button("Up", 100,100,100,50,player);
+  downArrow = new button("Down", 200,100,100,50,player);
+  leftArrow = new button("Left", 300,100,100,50,player);
+  rightArrow = new button("Right", 400,100,100,50,player);
   movementButtonArray.push(upArrow);
   movementButtonArray.push(downArrow);
   movementButtonArray.push(leftArrow);
   movementButtonArray.push(rightArrow);
 
-  choosePlayer1 = new button("Player1", 100,50,100,50,null);
-  choosePlayer2= new button("Player2", 200,50,100,50,null);
-  reset = new button("Reset", 300,50,100,50,null);
+  choosePlayer1 = new button("Player1", 100,50,100,50,player);
+  choosePlayer2= new button("Player2", 200,50,100,50,player);
+  reset = new button("Reset", 300,50,100,50,player);
 
   traps.push(new boardTrap(newBoard[7],1,1))
   traps.push(new boardTrap(newBoard[8],1,1))
@@ -61,7 +69,10 @@ function setup() {
 }
 
 function draw() {
-  
+  //resultTurn is a global variable present on the turns class. turns is declared in the set up
+  if(resultTurn[1] != null)
+  movementClass = new Movement(resultTurn[1].id);
+
   newBoard = boardClass.createBoard(boardWidth,boardHeight,200);
   for (let i = 0; i < traps.length;i++){
     traps[i].placeTrap();
@@ -85,20 +96,16 @@ function draw() {
 
 
   canClick = movementClass.movement(newBoard, movementButtonArray, player,canClick);
-  if (canClick == false){
-    console.log("Hehhehe");
-    //movementClass.GetCurrentParcel(playerId);
-  }
   if(mouseIsPressed == false){
     canClick = true};
 }
 function Selector(){
   if(choosePlayer1.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
-    console.log("Player1");
+    playerRoomId = 0;
     canClick = false;
   }
   if(choosePlayer2.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
-    console.log("Player2");
+    playerRoomId = 1
     canClick = false;
   }
   if(reset.clicker(mouseX, mouseY, canClick && mouseIsPressed)){

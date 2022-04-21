@@ -7,7 +7,7 @@ let parcel;
 
 class Movement {
     constructor(id){
-        this.id = id;
+        this.id = id; 
     }
     static async GetCurrentParcel(id)
     {

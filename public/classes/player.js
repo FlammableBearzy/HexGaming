@@ -1,8 +1,9 @@
 class playerCreator{
-    constructor(parcel, size, color){
+    constructor(parcel, size, color, id){
         this.parcel = parcel;
         this.size = size;
         this.color = color;
+        this.id = id;
     }
     
     
