@@ -19,10 +19,10 @@ module.exports.getAllRooms = async function(){
         };
     }
 }
-/*
+
 module.exports.getGameByID = async function (id) {
     try {
-        let sql = `Select room_id, room_name, room_state, room_player1_id, room_player2_id, room_game_id from room, room where room_game_id = $1`;
+        let sql = `Select * from room where room_game_id = $1;`;
         let result = await pool.query(sql, [id]);
         if (result.rows.length > 0){
             let game = result.rows[0];
@@ -35,19 +35,34 @@ module.exports.getGameByID = async function (id) {
         return { status: 500, result: err};
     }
 };
-*/
-module.exports.play = async function (player, parsel, promise) {
+
+module.exports.play = async function (id ,player, parsel) {
     try{
-        if(!parseInt(player) && !parseInt(parseInt))
+        if (!parseInt(id))
         {
-            console.log("This player: " + player + " and this parsel: " + parsel);
-            return {
-                status: 400,
-                result: { msg: "This player: " + player + ", This parsel: " + parsel}
-            };
+            if(!parseInt(player) && !parseInt(parseInt))
+            {
+                console.log("This player: " + player + " and this parsel: " + parsel);
+                return {
+                    status: 400,
+                    result: { msg: "This player: " + player + ", This parsel: " + parsel}
+                };
+            }
+            console.log("This room id is: " + id);
+            return { status: 400, result: { msg: "Room id must be a number" } };           
         }
 
-        let sqlU = "UPDATE moveAction SET mov_action_parselId = $2 WHERE mov_player_id = $1;";
+        //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
+        //let result = await pool.query(sql, [id, player, parsel]);
+
+        let sqlr = `Select * from room, moveAction where room.room_game_id = $1;`;
+        let resultr = await pool.query(sqlr, [id]);
+        let room = resultr.rows[0];
+        if (!room)
+        {
+            return { status: 404, result: { msg: "No room with that id" } };
+        } else {
+            let sqlU = "UPDATE moveAction SET mov_action_parselId = $2 WHERE mov_player_id = $1;";
         console.log(player);
         console.log(parsel);
         let resultU = await pool.query(sqlU, [player, parsel]);
@@ -74,6 +89,10 @@ module.exports.play = async function (player, parsel, promise) {
                 msg: "You posted!"
             }
           };
+            //return { status: 200, result: { msg: "You've entered the room" } };    
+        }
+
+        
         //let resultU = await pool.query(sqlU, [player, parsel],(arg) => promise(arg));
     } catch (err) {
         console.log(err);

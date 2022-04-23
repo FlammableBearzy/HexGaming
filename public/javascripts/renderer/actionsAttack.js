@@ -17,7 +17,7 @@ class Attacks {
         this.action = action;
     };
 
-    static async preloadImages()
+    static async preloadAction()
     {
         let attackImage = {};
         let action = await getActions();
@@ -25,6 +25,7 @@ class Attacks {
         {
             ActionID = i.att_action_id;
             ActionName = i.att_action_name;
+            ActionCooldown = i.att_action_cooldown;
             attackImage[ActionID] = loadImage('./images/' + ActionName + ActionID + '.png');
         }
         Attacks.initImgs(attackImage);
@@ -34,8 +35,15 @@ class Attacks {
         Attacks.attackImage = imgHash;
     };
 
-    static async actionsCooldown()
+    async actionsCooldown()
     {
+        let action = await this.getAction();
+        for (let i of action)
+        {
+            ActionCooldown = i.att_action_cooldown;
+            console.log(ActionCooldown);
+        }
+
         /*
         let action = await getActions();
         for (let i of action)
@@ -106,21 +114,18 @@ class Attacks {
     {
         if(x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height))
         {
-            //if(actionsCooldown() != undefined)
-            //{
-                actionsCooldown();
-            //}
+            console.log("This has been pressed");
+            console.log(Attacks.attackCooldown);
+            if(Attacks.attackCooldown != undefined)
+            {
+                try{
+                    console.log("Went through");
+                } catch (err) {
+                    console.log("got an error");
+                }
+            }
         }
         
-    };
-
-    updateCooldown(cooldown)
-    {
-        this.cooldown = cooldown;
-        
-        let ClickUpdate;
-
-        //if (this != undefined && Attacks.attackImage != undefined)
     };
 
 }

@@ -13,6 +13,21 @@ async function getActions()
         console.log(err);
     }
 };
+
+/*
+async function UpdateAttackCooldown()
+{
+    try {
+        const response = await fetch(`/api/actions/${actionId}`);
+        if (response.status == 200)
+
+    } catch (err) {
+
+    }
+
+};
+*/
+
 /*
 async function postMove(roomId, playerId)
 {

@@ -1,4 +1,4 @@
-/*
+
 async function getRoom(gameId) {
     try {
         const response = await fetch(`/api/rooms/${gameId}`);
@@ -16,12 +16,12 @@ async function getRoom(gameId) {
         console.log(err);
     }
 }
-*/
+
 
 async function play(playerId, parselId){
     try {
         console.log("We entered the play function");
-        const response = await fetch(`/api/rooms/1/plays`,
+        const response = await fetch(`/api/rooms/${gameId}/plays`,
         {
             method: "POST",
             headers: {"Content-Type": "application/json"},
