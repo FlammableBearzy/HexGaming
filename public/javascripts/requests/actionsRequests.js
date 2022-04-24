@@ -2,6 +2,7 @@ async function getActions()
 {
    try {
        const response = await fetch(`/api/actions`);
+       
        if (response.status == 200)
         {
            var actions = await response.json();

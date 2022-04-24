@@ -30,6 +30,9 @@ let canClick = true;
 //turn
 let turnsClass;
 
+let tester = false;
+let parcela = null;
+
 
 function setup() {
   
@@ -47,6 +50,7 @@ function setup() {
   
 
   movementClass = new Movement(player[playerRoomId].id, turnsClass);
+  
 
   upArrow = new button("Up", 100,100,100,50,player);
   downArrow = new button("Down", 200,100,100,50,player);
@@ -77,8 +81,7 @@ function draw() {
   for (let i = 0; i < traps.length;i++){
     traps[i].placeTrap();
   }
-
-
+  
 
   player[0].playerPlacer();
   player[1].playerPlacer();

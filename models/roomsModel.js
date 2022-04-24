@@ -36,7 +36,7 @@ module.exports.getGameByID = async function (id) {
     }
 };
 
-module.exports.play = async function (id ,player, parsel) {
+module.exports.play = async function (id ,player, parsel, direction) {
     try{
         if (!parseInt(id))
         {
@@ -65,6 +65,8 @@ module.exports.play = async function (id ,player, parsel) {
             let sqlU = "UPDATE moveAction SET mov_action_parselId = $2 WHERE mov_player_id = $1;";
         console.log(player);
         console.log(parsel);
+        console.log(direction);
+        parsel = parsel + direction;
         let resultU = await pool.query(sqlU, [player, parsel]);
             console.log(resultU);
        if(resultU == undefined)

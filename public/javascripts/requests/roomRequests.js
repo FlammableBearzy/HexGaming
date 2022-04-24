@@ -6,7 +6,7 @@ async function getRoom(gameId) {
         if (response.status == 200)
         {
             var room = await response.json();
-            return room;   
+            return room;  
         } else {
             //Trear errors like 404 here
             console.log(response);
@@ -18,14 +18,14 @@ async function getRoom(gameId) {
 }
 
 
-async function play(playerId, parselId){
+async function play(playerId, parselId, gameId, direction){
     try {
         console.log("We entered the play function");
         const response = await fetch(`/api/rooms/${gameId}/plays`,
         {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ playerID: playerId, parselID: parselId})
+            body: JSON.stringify({ playerID: playerId, parselID: parselId, direction: direction})
         });
         if (response.status == 200)
         {

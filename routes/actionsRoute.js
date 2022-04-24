@@ -5,13 +5,11 @@ var aModel = require("../models/actionsModel");
 router.get('/', async function(req, res, next){
     console.log("Get all Attack Actions")
     let result = await aModel.getAllAttackActions();
-    res.status(result.status).send(result.result);
-});
-
-router.get('/', async function(req, res, next){
-    console.log("Get all Movement Actions")
-    let result = await aModel.getAllMoveActions();
-    res.status(result.status).send(result.result);
+    let result2 = await aModel.getAllMoveActions();
+    if(result.status == result2.status)
+    res.status([result.status]).send([result.result , result2.result]);
+    else
+    console.log("Status1: " + result.status + " Status2: " + result2.status);
 });
 
 /*
