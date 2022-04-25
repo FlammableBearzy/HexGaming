@@ -22,15 +22,17 @@ class Attacks {
 
     static async preloadAction()
     {
+        
         let attackImage = {};
         let action = await getActions();
-        for (let i of action)
+        for (let i of action[0])
         {
             ActionID = i.att_action_id;
             ActionName = i.att_action_name;
             attackImage[ActionID] = loadImage('./images/' + ActionName + ActionID + '.png');
         }
         Attacks.initImgs(attackImage);
+        
     }; 
 
     static initImgs(imgHash){
