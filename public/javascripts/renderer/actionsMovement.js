@@ -37,10 +37,16 @@ class Movement {
     static async StartGame(id,newBoard)
     {
           parcel = await play(1,1,1, 0);
-          player[id].playerPlacer(newBoard[1]);
-          parcel2 = await play(2,18,1, 0);
-          player[id].playerPlacer(newBoard[1]);
-    }; 
+          player[1].playerPlacer(newBoard[1]);
+          let parcel2 = await play(2,18,1, 0);
+          player[2].playerPlacer(newBoard[18]);
+    };
+    static async UpdatePositionsToClient()
+    {
+        let parcelID1 = await this.GetCurrentParcel(1);
+        let parcelID2 = await this.GetCurrentParcel(2);
+        return [parcelID1, parcelID2];
+    } 
     
     movement(board, arrows,player, canClick){
         let upArrow = arrows[0];

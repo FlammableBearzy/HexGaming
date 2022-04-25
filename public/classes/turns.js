@@ -8,7 +8,7 @@ class turn{
         this.centery = this.y + (this.size/2);
         this.currentTurn = 0;
         this.turnCounter = 0;
-        this.index = 0;
+        this.index = 1;
         this.player = player;
     }
     builder(){
@@ -24,12 +24,12 @@ class turn{
         this.currentTurn++;
         this.turnCounter++;
         if(this.turnCounter == 2){
-            if(this.index == 0) this.index = 1; else this.index = 0;
+            if(this.index == 1) this.index = 2; else this.index = 2;
             this.turnCounter = 0;
         }
         resultTurn[0] = this.currentTurn;
         resultTurn[1] =this.player[this.index];
-        console.log(resultTurn[1].id);
+        console.log(this.player[this.index]);
     }
 
 
