@@ -1,0 +1,41 @@
+--POPULATE
+
+--Player
+insert into player (player_name, player_pass, player_health) values('Fernando', 'PrecoCerto', 3);
+insert into player (player_name, player_pass, player_health) values('Putin', 'Ucrania', 3);
+
+--Move Action
+insert into moveAction(mov_action_id, mov_player_id, mov_action_parselId) values(1, 1, 1);
+Insert Into moveAction (mov_action_id, mov_player_id, mov_action_parselid) values (2,2,18);
+
+--Attack Action
+insert into attackAction (att_action_id, att_action_name, att_action_description, att_action_cooldown) values(1, 'Attack', 'Attacks Horizontally', 6);
+insert into attackAction (att_action_id, att_action_name, att_action_description, att_action_cooldown) values(2, 'Attack', 'Attacks Vertically', 6);
+insert into attackAction (att_action_id, att_action_name, att_action_description, att_action_cooldown) values(3, 'Attack', 'Places Bomb', 10);
+
+--Attack In Game
+insert into attackInGame (att_IG_action_id, att_IG_player_id, att_IG_cooldown) values(1, 1, 0);
+insert into attackInGame (att_IG_action_id, att_IG_player_id, att_IG_cooldown) values(2, 1, 0);
+insert into attackInGame (att_IG_action_id, att_IG_player_id, att_IG_cooldown) values(3, 1, 0);
+
+insert into attackInGame (att_IG_action_id, att_IG_player_id, att_IG_cooldown) values(1, 2, 0);
+insert into attackInGame (att_IG_action_id, att_IG_player_id, att_IG_cooldown) values(2, 2, 0);
+insert into attackInGame (att_IG_action_id, att_IG_player_id, att_IG_cooldown) values(3, 2, 0);
+
+--Room
+
+insert into room (room_name, room_state, room_player1_id, room_player2_id, room_game_id, room_turns) values('Palco Da Fatima', 'Playing', 1, 2, 1, 0);
+
+
+
+commit;
+
+--Testing
+
+--UPDATE moveAction SET mov_action_parselId = 2 WHERE mov_player_id = 1;
+--select * from attackAction;
+--select att_IG_player_id, att_IG_action_id, att_IG_cooldown from attackInGame where attackInGame.att_IG_player_id = 1 and attackInGame.att_IG_action_id = 3;
+select * from moveAction;
+--UPDATE attackInGame SET att_IG_cooldown = 0 where att_IG_action_id = 1 and att_IG_player_id = 1;
+-- * from attackInGame;
+--Update moveAction SET mov_action_parselid = 1 WHERE mov_player_id = 1;
