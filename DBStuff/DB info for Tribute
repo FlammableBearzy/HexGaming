@@ -1,0 +1,181 @@
+--Remove before creating them yet again
+DROP TABLE IF EXISTS player CASCADE;
+DROP TABLE IF EXISTS moveAction CASCADE;
+DROP TABLE IF EXISTS attackAction CASCADE;
+DROP TABLE IF EXISTS attackInGame CASCADE;
+DROP TABLE IF EXISTS room CASCADE;
+DROP TABLE IF EXISTS traps CASCADE;
+
+
+
+--CREATE DATABASE
+create table player (
+					player_id SERIAL NOT null,
+					player_name VARCHAR(60),					--Name of the player
+					player_pass VARCHAR(60),					--Password of the player
+					player_health int,
+					primary key(player_id)
+);
+
+create table moveAction (
+					--ID for movement. 1 = Up, 2 = Down, 3 = Left, 4 = Right
+					mov_action_id int not null,			--Movement action
+					mov_player_id int not null,			--FK
+					mov_action_parselId int not null, 	
+					primary key (mov_action_id)
+);
+
+create table attackAction (
+					--ID for Attacks. 1 = Horizontal, 2 = Vertical, 3 = Bomb, 4 = ?
+					att_action_id int not null,
+					att_action_name VARCHAR(60) not null,		--Attack action
+					att_action_description VARCHAR(60), 		--Action description (This describes the type of attack)
+					att_action_cooldown int, 					--Cooldown
+					primary key (att_action_id)	
+);
+
+create table attackInGame (
+				--ID of "In Game" attacks
+				att_IG_id SERIAL not null,
+				att_IG_action_id int not null, 			--FK of att_action_id
+				att_IG_player_id int not null,			--FK of Player_id
+				att_IG_cooldown int not null,			--This will decrement each turn, if it reaches 0 AND its used, then will get replaced by the one from att_action_cooldown
+				primary key (att_IG_id)
+);
+
+--Para remover
+--create table game (
+--					--This is the board information
+--					game_id SERIAL, 							--Id of the board
+--					game_s_time TIMESTAMP, 						--Stating the match
+--					game_e_time TIMESTAMP, 						--End match by timeout
+--					game_max_player_number INT not null, 		--In our case will always be 2
+--					game_starting_player INT, 					--This is a reference to know who start the game --FK
+--					--game_board_dimentions VARCHAR(128), 		--This tells the dimention of the board. already adapted to received more than a 6x3 one.
+--					game_move_time_limit VARCHAR(60) not null, 	--This is the time limit the player has per turn
+--					game_action_limit INT,						--This is the actions limit the player has per turn
+--					game_time_limit VARCHAR(60) not null, 		--This is the game time limit
+--					game_result_id INT not null, 				--This is the result of the match (1 - p1 won, 2 - p2 won, 3 - match abandoned) FK
+--					primary key(game_id)
+--);
+
+create table room (
+					--Links the game with the players
+					room_id serial,
+					room_name VARCHAR(60),
+					room_state VARCHAR(60),	
+					room_player1_id INT, 	--FK
+					room_player2_id INT,	--FK
+					room_game_id INT,
+					room_turns Int not null,
+					--room_player_health INT not null, 					--Player health in a specific match
+					--room_mov_action_id int not null,					--Movement Action
+					--room_att_action_id int not null,					--Attack Action
+					primary key(room_id)
+);
+
+create table traps(
+					--Placeables attack actions
+					trap_id SERIAL,
+					trap_room_id int,			--FK
+					trap_player_id int,			--FK
+					trap_parsel_id int,
+					trap_attack_id int, 		--FK
+					trap_activation int,		--This always attacks on the next turn of the player that puts it.
+					primary key(trap_id)
+);
+
+--create table gameResult (
+--					result_id int,
+--					result_description VARCHAR(128),
+--					primary key(result_id)
+--);
+
+-- Foreign key
+
+--room
+alter table room
+add constraint room_fk_player1_id
+foreign key(room_player1_id)
+references player(player_id)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+alter table room
+add constraint room_fk_player2_id
+foreign key(room_player2_id)
+references player(player_id)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--alter table room
+--add constraint room_fk_game_id
+--foreign key(room_game_id)
+--references game(game_id)
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--alter table room
+--add constraint room_player_health_fk_player_health
+--foreign key(room_player_health)
+--references player(player_health)
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--alter table room
+--add constraint room_att_action_id_fk_att_action_id
+--foreign key(room_att_action_id)
+--references attackAction(att_action_id)
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--game
+--alter table game
+--add constraint game_starting_player_fk_player_id
+--foreign key(game_starting_player)
+--references player(player_id)
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--alter table game
+--add constraint game_result_id_fk_result_id
+--foreign key(game_result_id)
+--references gameResult(result_id)
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--attackInGame
+alter table attackInGame
+add constraint att_IG_action_id_fk_att_action_id
+foreign key(att_IG_action_id)
+references attackAction(att_action_id)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+alter table attackInGame
+add constraint att_IG_player_id_fk_player_id
+foreign key(att_IG_player_id)
+references player(player_id)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+--Trap
+alter table traps
+add constraint trap_room_id_fk_room_id
+foreign key(trap_room_id)
+references room(room_id)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+alter table traps
+add constraint trap_player_id_fk_player_id
+foreign key(trap_player_id)
+references player(player_id)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+alter table traps
+add constraint trap_attack_id_fk_attack_id
+foreign key(trap_attack_id)
+references attackAction(att_action_id)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+alter table moveAction
+add constraint mov_player_id_fk_player_id
+foreign key(mov_player_id)
+references player(player_id)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+commit;
+
+
