@@ -34,6 +34,13 @@ class Movement {
           return parcel;
         }
     }; 
+    static async StartGame(id,newBoard)
+    {
+          parcel = await play(1,1,1, 0);
+          player[id].playerPlacer(newBoard[1]);
+          parcel2 = await play(2,18,1, 0);
+          player[id].playerPlacer(newBoard[1]);
+    }; 
     
     movement(board, arrows,player, canClick){
         let upArrow = arrows[0];

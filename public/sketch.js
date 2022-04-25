@@ -9,7 +9,7 @@ let traps = [];
 
 //player
 let player = [];
-let playerRoomId = 0;
+let playerRoomId = null;
 
 
 //Movemet
@@ -45,11 +45,12 @@ function setup() {
 
   player.push (new playerCreator(newBoard[1], 150, "Blue",0));
   player.push(new playerCreator(newBoard[18], 150, "Red", 1));
-  turnsClass = new turn(200,100, 100, player);
+  turnsClass = new turn(1200,50, 200, player);
+  Movement.StartGame(0, newBoard);
 
   
 
-  movementClass = new Movement(player[playerRoomId].id, turnsClass);
+  //movementClass = new Movement(player[playerRoomId].id, turnsClass);
   
 
   upArrow = new button("Up", 100,100,100,50,player);
@@ -74,8 +75,11 @@ function setup() {
 
 function draw() {
   //resultTurn is a global variable present on the turns class. turns is declared in the set up
-  if(resultTurn[1] != null)
-  movementClass = new Movement(resultTurn[1].id);
+  if(resultTurn[1] != null && resultTurn[1].id == playerRoomId)
+  {
+    movementClass = new Movement(resultTurn[1].id);
+  }
+  turnsClass.builder();
 
   newBoard = boardClass.createBoard(boardWidth,boardHeight,200);
   for (let i = 0; i < traps.length;i++){
@@ -94,25 +98,24 @@ function draw() {
   choosePlayer1.buttonBuilder()
   choosePlayer2.buttonBuilder()
   reset.buttonBuilder()
-
+  if(playerRoomId == null)
   Selector();
 
-
+  if(movementClass != null && resultTurn[1].id == playerRoomId)
   canClick = movementClass.movement(newBoard, movementButtonArray, player,canClick);
   if(mouseIsPressed == false){
     canClick = true};
 }
 function Selector(){
-  if(choosePlayer1.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
+  if(choosePlayer1.clicker(mouseX, mouseY, canClick && mouseIsPressed) && playerRoomId == null){
     playerRoomId = 0;
     canClick = false;
   }
-  if(choosePlayer2.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
+  if(choosePlayer2.clicker(mouseX, mouseY, canClick && mouseIsPressed) && playerRoomId == null){
     playerRoomId = 1
     canClick = false;
   }
-  if(reset.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
-    console.log("Reset");
+  if(reset.clicker(mouseX, mouseY, canClick && mouseIsPressed && playerRoomId == null)){
     canClick = false;
   }
 }
