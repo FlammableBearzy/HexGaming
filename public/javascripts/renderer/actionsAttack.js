@@ -1,6 +1,9 @@
 let ActionID;
 let ActionName;
-let ActionCooldown;
+
+let PlayerID;
+let IngameAction;
+let IngameCooldown;
 
 const imgCenterVertical = 0.4;
 const imgRelWidth = 0.6;
@@ -25,7 +28,6 @@ class Attacks {
         {
             ActionID = i.att_action_id;
             ActionName = i.att_action_name;
-            ActionCooldown = i.att_action_cooldown;
             attackImage[ActionID] = loadImage('./images/' + ActionName + ActionID + '.png');
         }
         Attacks.initImgs(attackImage);
@@ -35,44 +37,23 @@ class Attacks {
         Attacks.attackImage = imgHash;
     };
 
-    async actionsCooldown()
+    static async GetCurrentActionsInGame()
     {
-        let action = await this.getAction();
-        for (let i of action)
-        {
-            ActionCooldown = i.att_action_cooldown;
-            console.log(ActionCooldown);
-        }
+        let actions = await getUpdateAttackCooldown();
 
-        /*
-        let action = await getActions();
-        for (let i of action)
+        for (let i of actions)
         {
-            ActionCooldown = i.att_action_cooldown;
-            // temp = i.att_action_cooldown;
-            // console.log("Pepo1" + ActionID);
-            // ActionaCooldown = this.cooldown;
-            // this.cooldown = cooldown
-            console.log("Pepo2" + ActionID);
-        }
+            PlayerID = i.att_ig_player_id;
+            IngameAction = i.att_ig_action_id;
+            IngameCooldown = i.att_ig_cooldown
 
-        if (this != undefined && ActionCooldown != undefined)
-        {
-
-            console.log(ActionCooldown);
-            // cooldown--;
-            // if (cooldown == -1)
-            // {
-            //     cooldown = temp;
-            // }
-            // console.log(this.cooldown);
-            return;
+            console.log(i.att_ig_player_id, i.att_ig_action_id, i.att_ig_cooldown)
         }
-        */
-        //return 1;
     }
 
-    
+    //static async 
+
+
     pepo() {
         //console.log("ActionAttack Drawn Called")
         //console.log ("Prior If " + this.action);
@@ -115,17 +96,6 @@ class Attacks {
         if(x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height))
         {
             console.log("This has been pressed");
-            console.log(Attacks.attackCooldown);
-            if(Attacks.attackCooldown != undefined)
-            {
-                try{
-                    console.log("Went through");
-                } catch (err) {
-                    console.log("got an error");
-                }
-            }
-        }
-        
+        }    
     };
-
 }
