@@ -24,6 +24,12 @@ router.post('/:id/plays', async function(req, res, next) {
     let result = await rModel.play(id, playerID, parselID, direction);
     res.status(result.status).send(result.result);
 });
+router.post('/turnChanger', async function(req,res, next){
+    let id = req.body.id;
+    console.log("We are sending: "+id);
+    let result = await rModel.turnChanger(id);
+    res.status(result.status).send(result.result);
+});
 
 module.exports = router;
 

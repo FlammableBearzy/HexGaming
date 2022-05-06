@@ -40,3 +40,25 @@ async function play(playerId, parselId, gameId, direction){
         console.log(err);
     }
 }
+async function turnChanger(roomId){
+        try {
+            console.log("In roomRequests");
+            const response = await fetch(`/api/rooms/${roomId}/turnChanger`,
+            {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ id: roomId })
+            });
+            if (response.status == 200)
+            {
+                var turn = await response.json();
+                return turn;   
+            } else {
+                //Trear errors like 404 here
+                console.log(response);
+            }
+        } catch (err){
+            //Treat 500 errors here
+            console.log(err);
+        }
+}

@@ -101,3 +101,60 @@ module.exports.play = async function (id ,player, parsel, direction) {
         return { status: 420, result: err };
     }
 }
+module.exports.turnChanger = async function (id) {
+    try{
+        
+        if (!parseInt(id)){
+
+            return { status: 400, result: { msg: "Room id must be a number" } };           
+        }
+
+        //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
+        //let result = await pool.query(sql, [id, player, parsel]);
+        let id2 = 1;
+        console.log(id);
+        let sqlr = `Select * from room where room_game_id = 1;`; // removed a room.room_game_id, and placed room_game_id;
+        let resultr = await pool.query(sqlr);
+        let room = resultr.rows[0].room_id;
+        let currentTurn = resultr.rows[0].room_turns;
+        console.log(room);
+        if (!room && !currentTurn)
+        {
+            return { status: 404, result: { msg: "No room: "+ room + "; currentTurn: " + currentTurn}};
+        } else {
+            let newTurn = currentTurn + 1;
+            let sqlU = "UPDATE room SET room_turns = $2 WHERE room_id = $1;";
+            let resultU = await pool.query(sqlU, [room, newTurn]);
+            console.log(resultU);
+       if(resultU == undefined)
+        {
+            return {
+                status : 404,
+                result : {msg : "Something is missing"}
+            };
+        }
+
+        if (resultU.rowCount == 0)
+        {
+            return {
+
+                status : 500,
+                result : {msg : "The updated failed"}
+            };
+        }
+        return {
+            status: 200,
+            result: {
+                msg: "You posted!"
+            }
+          };
+            //return { status: 200, result: { msg: "You've entered the room" } };    
+        }
+
+        
+        //let resultU = await pool.query(sqlU, [player, parsel],(arg) => promise(arg));
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}

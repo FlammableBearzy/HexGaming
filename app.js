@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var roomsRouter = require('./routes/roomsRoute');
 var actionsRouter = require('./routes/actionsRoute');
+var loginRouter = require('./routes/loginRoute')
 
 var app = express();
 
@@ -23,5 +24,6 @@ app.use('/users', usersRouter);
 
 app.use('/api/rooms', roomsRouter);
 app.use('/api/actions', actionsRouter);
+app.use('/api/login', loginRouter);
 
 module.exports = app;
