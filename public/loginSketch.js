@@ -5,6 +5,8 @@ let password;
 let loginButton;
 let registButton;
 let canClick = true;
+let isLogined = false;
+let playerIdentifier = null;
 
 
 function setup(){
@@ -26,13 +28,16 @@ function draw()
     if(loginButton.clicker(mouseX, mouseY, canClick && mouseIsPressed))
     {
         successLogin = LoginClass.doLogin(username.value(), password.value());
-        console.log(successLogin.isFulfilled);
-        canClick = false;
     }
     if(registButton.clicker(mouseX, mouseY, canClick && mouseIsPressed))
     {
         LoginClass.doRegister(username.value(), password.value());
         canClick = false;
+    }
+    if(playerIdentifier != null && !isLogined)
+    {
+        window.alert("Login successful");
+        isLogined = true;
     }
 }
 
@@ -40,17 +45,15 @@ class LoginClass{
     static async doLogin(user, pass)
     {
         let canLogin = await login(user, pass);
-        return canLogin;
+        if(canLogin != undefined){
+            playerIdentifier = canLogin.player.player_id; 
+        }
         
     }
     static async doRegister(user, pass)
     {
         let canLogin = await register(user, pass);
-        console.log(canLogin)
-        if(canLogin !=null){
-            return true;
-        }else return false;
-        console.log(canLogin.player.player_id);
+        window.alert(canLogin.msg);
     }
 
 }
