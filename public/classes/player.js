@@ -1,3 +1,4 @@
+let playerIdentifier = null;
 class playerCreator{
     constructor(parcel, size, color, id){
         this.parcel = parcel;

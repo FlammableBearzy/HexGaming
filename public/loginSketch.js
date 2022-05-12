@@ -6,7 +6,7 @@ let loginButton;
 let registButton;
 let canClick = true;
 let isLogined = false;
-let playerIdentifier = null;
+
 
 
 function setup(){
@@ -37,6 +37,7 @@ function draw()
     if(playerIdentifier != null && !isLogined)
     {
         window.alert("Login successful");
+        window.location.href = "game.html";
         isLogined = true;
     }
 }
