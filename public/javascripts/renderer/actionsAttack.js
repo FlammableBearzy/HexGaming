@@ -38,7 +38,7 @@ class Attacks {
     static initImgs(imgHash){
         Attacks.attackImage = imgHash;
     };
-
+/*
     static async GetCurrentActionsInGame()
     {
         let actions = await getUpdateAttackCooldown();
@@ -49,21 +49,19 @@ class Attacks {
             IngameAction = i.att_ig_action_id;
             IngameCooldown = i.att_ig_cooldown
 
-            console.log(i.att_ig_player_id, i.att_ig_action_id, i.att_ig_cooldown)
+            console.log(i.att_ig_player_id, i.att_ig_action_id, i.att_ig_cooldown);
+        
         }
-    }
-
-    //static async 
-
+    }IngameCooldown != undefined
+*/
 
     pepo() {
         //console.log("ActionAttack Drawn Called")
-        //console.log ("Prior If " + this.action);
-        
+        //console.log ("Prior If " + this.action);        
         if (this != undefined && Attacks.attackImage != undefined)
         {
             //console.log(this.action);
-            if(this.action)
+            //if(this.action)
             {
                 imageMode(CENTER);
                 let img = Attacks.attackImage[this.action];
@@ -73,8 +71,9 @@ class Attacks {
                 //let ratio = (this.width * imgRelWidth) / img.width;
                 image(img,this.x +(this.action * 1/2) + offsetX, this.y + this.height - offsetY, this.width, this.height);
                 fill(0,0,0);
-                //textAlign(CENTER,CENTER);
-                //text(this.card,this.x+this.width/2,this.y+this.height*textCenterVertical);
+                textAlign(CENTER,CENTER);
+                textSize(30);
+                text(this.action,this.x+this.width/2,this.y+this.height*3/2*textCenterVertical);
             }
         }
         else {

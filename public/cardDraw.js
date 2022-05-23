@@ -17,8 +17,7 @@ function preload() {
 
 function setup() {
     var canvas = createCanvas(width, height);
-    //kekw();
-    //card.pepo();
+
 }
 
 function draw() {

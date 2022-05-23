@@ -14,10 +14,11 @@ async function getActions()
         console.log(err);
     }
 };
-async function getUpdateAttackCooldown()
+
+async function getUpdateAttackCooldownByPlayer(playerId)
 {
     try {
-        const response = await fetch(`/api/actions/inPlay`);
+        const response = await fetch(`/api/actions/${playerId}/inPlay`);
         if (response.status == 200)
         {
             var action = await response.json();
@@ -31,15 +32,14 @@ async function getUpdateAttackCooldown()
     }
 }
 
-async function postUpdateAttackCooldown(playerId, actionId, cooldown)
+async function postUpdateAttackCooldownByPlayer(playerId, actionId, cooldown)
 {
     try {
         console.log(cooldown);
-        const response = await fetch(`/api/actions/inPlay`,
+        const response = await fetch(`/api/actions/${playerId}/inPlay`,
         {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ playerID: playerId, actionID: actionId, cooldownID: cooldown})
+            headers: {"Content-Type": "application/json"}
         });
         if (response.status == 200)
         {
@@ -53,3 +53,26 @@ async function postUpdateAttackCooldown(playerId, actionId, cooldown)
     }
 
 };
+
+async function postResetCooldown(playerId) 
+{
+    try {
+    const response = await fetch(`/api/actions/${playerId}/ResetCooldowns`,
+    {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        //body: JSON.stringify({ actionID: actionId, cooldownID: cooldown })
+    });
+
+    if (response.status == 200)
+    {
+        var action = await response.json();
+        return action;
+    } else {
+        console.log(response);
+    }
+
+    } catch (err) {
+        console.log(err)
+    }
+}
