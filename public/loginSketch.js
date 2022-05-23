@@ -1,12 +1,14 @@
 
 
+
 let username;
 let password;
 let loginButton;
 let registButton;
 let canClick = true;
 let isLogined = false;
-
+let canDrawMatchMaking = false;
+let matchMakingText;
 
 
 function setup(){
@@ -39,6 +41,17 @@ function draw()
         window.alert("Login successful");
         window.location.href = "game.html";
         isLogined = true;
+        canDrawMatchMaking = true;
+    }
+    if(canDrawMatchMaking)
+    {
+        username.position(windowWidth *2, windowHeight);
+        password.position(windowWidth *2, windowHeight);
+        createCanvas(windowWidth, windowHeight);
+        
+        
+
+        canDrawMatchMaking = false;
     }
 }
 
@@ -56,5 +69,12 @@ class LoginClass{
         let canLogin = await register(user, pass);
         window.alert(canLogin.msg);
     }
+
+}
+
+class Tinder
+{
+    //Match making class, jokes asside 
+    
 
 }
