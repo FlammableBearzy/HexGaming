@@ -33,6 +33,7 @@ let turnsClass;
 let tester = false;
 let parcela = null;
 
+let cookies;
 
 function setup() {
   
@@ -71,7 +72,9 @@ function setup() {
   traps.push(new boardTrap(newBoard[12],1,1))
 
   timerRefreshPage();
-  
+
+ 
+  ChipsAhoy.getMeCookies();
 }
 
 function draw() {
@@ -127,7 +130,7 @@ function Builder(){
   choosePlayer1.buttonBuilder()
   choosePlayer2.buttonBuilder()
   reset.buttonBuilder()
-
+  console.log(cookies)
 }
 
 function timerRefreshPage(){
@@ -147,6 +150,16 @@ function timerRefreshPage(){
   }
   }, 2000);
   
+}
+class ChipsAhoy{
+  static async getMeCookies()
+  {
+    let temp;
+    temp = await getCookies();
+    if(temp != null){
+      cookies = temp;
+    }
+  }
 }
   
 

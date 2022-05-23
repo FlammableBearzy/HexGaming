@@ -13,7 +13,7 @@ class button{
     }
     
     buttonBuilder(){
-        console.log("WOOOORRRRKKKKKKK!!!!!!!!!!!!!!!!!!!!!!")
+        
         fill("White")
         rect(this.x, this.y, this.w, this.h);
         fill("Black")
