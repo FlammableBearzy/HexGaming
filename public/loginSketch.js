@@ -50,6 +50,8 @@ function draw()
         createCanvas(windowWidth, windowHeight);
         
         
+        
+        
 
         canDrawMatchMaking = false;
     }
@@ -69,7 +71,6 @@ class LoginClass{
         let canLogin = await register(user, pass);
         window.alert(canLogin.msg);
     }
-
 }
 
 class Tinder

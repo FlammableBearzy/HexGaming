@@ -1,6 +1,7 @@
 const { param } = require('../routes/index.js');
 var pool = require('./connection.js');
 
+let queue = null;
 module.exports.getAllRooms = async function(){
     try{
         let sql = `Select * from room`;
@@ -156,5 +157,105 @@ module.exports.turnChanger = async function (id) {
     } catch (err) {
         console.log(err);
         return { status: 420, result: err };
+    }
+}
+module.exports.queueJoiner = async function (id) {
+    try{
+        if(id == null)  return { status: 400, msg: "No Id was identified!" }
+        if(queue == null) queue = new Queue2();
+        let canQueue = true;
+        let currentId = queue.head;
+        for(i = 0; i < queue.count; i++){
+            if(id == queue.list[currentId])
+            {
+                canQueue = false;
+                break;
+            }
+        }
+        if(canQueue)
+        {
+            queue.enqueue(id);
+            console.log(queue.list);
+            return { status: 200, msg: "Enqueued" }
+        }
+        else
+        {
+            return { status: 421, msg: "Player was already in the queue!"}
+        }
+        
+
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
+
+
+module.exports.matchMaking = async function () {
+    try{
+        let id1;
+        let id2;
+        if(queue.count >= 2){
+            id1 = queue.dequeue();
+            id2 = queue.dequeue();
+
+            let sql = "INSERT INTO room () Values ('Playing', $1, $2, 0)"
+            await pool.query(sql, [id1, id2]);
+            return {status: 200, msg: "Joined a room!"}
+        }
+        else
+        {
+            return {status: 400, msg: "No partners found!"}
+        }
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
+module.exports.getRoomById = async function (id) {
+    try{
+        let sql = "Select * from room where room_player1_id = $1 OR room_player2_id = $1"
+        let result2 = await pool.query(sql,[id])
+        if(result2 != undefined)
+        return{status:200, result: result2}
+        else
+        return{status:400, msg: "No room found!"}
+        
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
+
+class Queue2
+{
+    constructor()
+    {
+        this.list = [];
+        this.head = 0;
+        this.tail =0;
+        this.count = 0;
+    }
+    enqueue(item){
+        this.list[this.tail] = item;
+        this.tail++;
+        this.count++;
+    }
+    dequeue(){
+        if(!this.isEmpty())
+        {
+            let item = this.list[this.head];
+            this.list[this.head] = null;
+            this.head++;
+            this.count--;
+            return item;
+        }
+        else
+        {
+            return null;
+        }
+    }
+    isEmpty(){
+        return this.count > 0;
     }
 }

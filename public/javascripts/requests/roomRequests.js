@@ -40,6 +40,49 @@ async function play(playerId, parselId, gameId, direction){
         console.log(err);
     }
 }
+async function enqueue(){
+    try {
+        const response = await fetch(`/api/rooms/enqueue`,
+        {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+        });
+        if (response.status == 200)
+        {
+            var msg = await response.json();
+            return msg;   
+        } else {
+            //Trear errors like 404 here
+            console.log(response);
+        }
+    } catch (err){
+        //Treat 500 errors here
+        console.log(err);
+    }
+}
+
+async function matchMake(){
+    try {
+        console.log("We entered the play function");
+        const response = await fetch(`/api/rooms/matchMaking`,
+        {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+        });
+        if (response.status == 200)
+        {
+            var roomId = await response.json();
+            return roomId;   
+        } else {
+            //Trear errors like 404 here
+            console.log(response);
+        }
+    } catch (err){
+        //Treat 500 errors here
+        console.log(err);
+    }
+}
+
 async function turnChanger(roomId){
         try {
             console.log("In roomRequests");
@@ -61,4 +104,23 @@ async function turnChanger(roomId){
             //Treat 500 errors here
             console.log(err);
         }
+}
+
+async function getRoomById(userId) 
+{
+    try {
+        const response = await fetch(`/api/rooms/${userId}/getRoomById`);
+        console.log("There was an input with mouse");
+        if (response.status == 200)
+        {
+            var room = await response.json();
+            return room;  
+        } else {
+            //Trear errors like 404 here
+            console.log(response);
+        }
+    } catch (err){
+        //Treat 500 errors here
+        console.log(err);
+    }
 }

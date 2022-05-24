@@ -31,5 +31,26 @@ router.post('/turnChanger', async function(req,res, next){
     res.status(result.status).send(result.result);
 });
 
+router.post('/enqueue', async function(req,res, next){
+    let id = req.signedCookies.userId;
+    console.log("We are sending: "+id);
+    let result = await rModel.queueJoiner(id);
+    res.status(result.status).send(result.msg);
+});
+
+router.post('/matchMaking', async function(req,res, next){
+    let id = req.signedCookies.userId;
+    console.log("We are sending: "+id);
+    let result = await rModel.turnChanger(id);
+    res.status(result.status).send(result.result);
+});
+router.get('/:id/getRoomById', async function(req, res, next) {
+    let id = req.params.id;
+    console.log("Get game with id "+id)
+    let result = await rModel.getRoomById(id);
+    res.status(result.status).send(result.result);
+});
+
+
 module.exports = router;
 
