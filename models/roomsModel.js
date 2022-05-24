@@ -193,19 +193,21 @@ module.exports.queueJoiner = async function (id) {
 
 module.exports.matchMaking = async function () {
     try{
+        if(queue == null) queue = new Queue2();
+        console.log("Matching");
         let id1;
         let id2;
         if(queue.count >= 2){
             id1 = queue.dequeue();
             id2 = queue.dequeue();
-
-            let sql = "INSERT INTO room () Values ('Playing', $1, $2, 0)"
+            console.log("Enquing:" + id1 + " and " + id2);
+            let sql = "INSERT INTO room (room_state, room_player1_id, room_player2_id, room_turns) Values ('Playing', $1, $2, 0)"
             await pool.query(sql, [id1, id2]);
             return {status: 200, msg: "Joined a room!"}
         }
         else
         {
-            return {status: 400, msg: "No partners found!"}
+            return {status: 202, msg: "No partners found!"}
         }
     } catch (err) {
         console.log(err);
@@ -244,10 +246,12 @@ class Queue2
     dequeue(){
         if(!this.isEmpty())
         {
+            console.log("Head: " + this.head + "Value: " + this.list[this.head])
             let item = this.list[this.head];
             this.list[this.head] = null;
             this.head++;
             this.count--;
+            console.log(item);
             return item;
         }
         else
@@ -256,6 +260,29 @@ class Queue2
         }
     }
     isEmpty(){
-        return this.count > 0;
+        return this.count == 0;
     }
 }
+/*setInterval(async function(){
+    try{
+        if(queue == null) queue = new Queue2();
+        console.log("Matching");
+        let id1;
+        let id2;
+        if(queue.count >= 2){
+            id1 = queue.dequeue();
+            id2 = queue.dequeue();
+            console.log("Enquing:" + id1 + " and " + id2);
+            let sql = "INSERT INTO room (room_state, room_player1_id, room_player2_id, room_turns) Values ('Playing', $1, $2, 0)"
+            await pool.query(sql, [id1, id2]);
+            return {status: 200, msg: "Joined a room!"}
+        }
+        else
+        {
+            return {status: 400, msg: "No partners found!"}
+        }
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}, 1000);*/

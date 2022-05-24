@@ -41,11 +41,11 @@ router.post('/enqueue', async function(req,res, next){
 router.post('/matchMaking', async function(req,res, next){
     let id = req.signedCookies.userId;
     console.log("We are sending: "+id);
-    let result = await rModel.turnChanger(id);
+    let result = await rModel.matchMaking();
     res.status(result.status).send(result.result);
 });
-router.get('/:id/getRoomById', async function(req, res, next) {
-    let id = req.params.id;
+router.get('/getRoomById', async function(req, res, next) {
+    let id = req.signedCookies.userId;
     console.log("Get game with id "+id)
     let result = await rModel.getRoomById(id);
     res.status(result.status).send(result.result);

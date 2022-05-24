@@ -9,6 +9,7 @@ let canClick = true;
 let isLogined = false;
 let canDrawMatchMaking = false;
 let matchMakingText;
+let pendingMatch = false;
 
 
 function setup(){
@@ -39,9 +40,12 @@ function draw()
     if(playerIdentifier != null && !isLogined)
     {
         window.alert("Login successful");
-        window.location.href = "game.html";
+        //window.location.href = "game.html";
         isLogined = true;
         canDrawMatchMaking = true;
+        pendingMatch = true;
+        Tinder.enqueuer();
+        
     }
     if(canDrawMatchMaking)
     {
@@ -49,11 +53,10 @@ function draw()
         password.position(windowWidth *2, windowHeight);
         createCanvas(windowWidth, windowHeight);
         
-        
-        
-        
-
         canDrawMatchMaking = false;
+    }
+    if(pendingMatch){
+
     }
 }
 
@@ -75,7 +78,20 @@ class LoginClass{
 
 class Tinder
 {
-    //Match making class, jokes asside 
+    static async enqueuer()
+    {
+        let msg = await enqueue();
+        console.log("In message:" + msg);
+        if(msg != null){
+            console.log("Trying to call matchmaker");
+           let msg2 = await matchMake();
+           console.log(msg2);
+        }
+    }
+    static async getARoom()
+    {
+        let roomId = await getRoomById();
     
+    }
 
 }

@@ -1,4 +1,5 @@
 
+
 async function getRoom(gameId) {
     try {
         const response = await fetch(`/api/rooms/${gameId}`);
@@ -46,11 +47,12 @@ async function enqueue(){
         {
             method: "POST",
             headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({})
         });
+        console.log(response.status);
         if (response.status == 200)
         {
-            var msg = await response.json();
-            return msg;   
+            return "Success";   
         } else {
             //Trear errors like 404 here
             console.log(response);
@@ -60,6 +62,7 @@ async function enqueue(){
         console.log(err);
     }
 }
+
 
 async function matchMake(){
     try {
@@ -106,10 +109,10 @@ async function turnChanger(roomId){
         }
 }
 
-async function getRoomById(userId) 
+async function getRoomById() 
 {
     try {
-        const response = await fetch(`/api/rooms/${userId}/getRoomById`);
+        const response = await fetch(`/api/rooms/getRoomById`);
         console.log("There was an input with mouse");
         if (response.status == 200)
         {
