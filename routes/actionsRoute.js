@@ -15,7 +15,7 @@ router.get('/', async function(req, res, next){
 router.get('/:id/inPlay', async function(req, res, next){
     let id = req.params.id;
     console.log(`Get the player with id ${id} so we can update its cards`);
-    let result = await aModel.getUpdateCooldownByPlayer(id);
+    let result = await aModel.getAttackInGameByPlayer(id);
     res.status(result.status).send(result.result);
 });
 
@@ -35,5 +35,16 @@ router.post('/:id/ResetCooldowns', async function(req, res, next){
     let result = await aModel.postResetActions(id);
     res.status(result.status).send(result.result);
 });
+
+router.post('/:id/PlaceTraps', async function(req, res, next)
+{
+    let id = req.params.id;
+    let roomID = req.body.roomID;
+    let attackID = req.body.attackID;
+    let parcelID = req.body.parcelID;
+    console.log(`The player ${id} in the game ${roomID} is placing the trap ${attackID} on the parsel ${parcelID}`);
+    let result = await aModel.postTrapPlacing(id, roomID, attackID, parcelID);
+    res.status(result.status).send(result.result)
+})
 
 module.exports = router;

@@ -26,7 +26,7 @@ module.exports.getAllAttackActions = async function(){
     }
 }; 
 
-module.exports.getUpdateCooldownByPlayer = async function(id)
+module.exports.getAttackInGameByPlayer = async function(id)
 {
     try{
         let sql = `select * from attackInGame where att_ig_player_id = $1;`;
@@ -140,6 +140,70 @@ module.exports.postResetActions = async function(id){
     } catch (err){
     console.log(err);
     return { status: 500, result: err};
+    }
+}
+
+module.exports.postTrapPlacing = async function(id, room, attack, parcel) {
+    try {
+        if(!parseInt(room))
+        {
+            console.log("This Room: " + room);
+            if(!parseInt(attack))
+            {
+                
+                console.log("This Attack:" + attack);       
+                if(!parseInt(parcel))
+                {
+                    console.log("This Parcel: " + parcel);
+                    return{ 
+                        status: 400,
+                        result: { msg: "This parcel " + parcel}
+                    };
+                }
+
+                return{ 
+                    status: 400,
+                    result: { msg: "This attack " + attack}
+                };
+            }
+
+            return {
+                status: 400,
+                result: {msg: "This Room: " + room + " with the player with id: " + id}
+            };
+        }
+
+        let sqlIn = `insert into traps (trap_player_id, trap_room_id, trap_attack_id, trap_parsel_id, trap_activation) values ($1, $2, $3, $4, 0)`;
+            let result = await pool.query(sqlIn, [id, room, attack, parcel]);
+            console.log(id);
+            console.log(room);
+            console.log(attack);
+            console.log(parcel);
+            let trap = result.rows;
+            if (result == undefined)
+            {
+                return {
+                    status: 404,
+                    result: {msg: "something is missing"}
+                };
+            }
+            
+            if (result.rowCount == 0)
+            {
+                return {
+                    status: 500,
+                    result: {msg: "The update failed"}
+                };
+            }
+            return {
+                status: 200,
+                result: {
+                    msg: "You posted!"
+                }
+            };
+    } catch (err) {
+        console.log(err);
+        return {status: 500, result: err}
     }
 }
 /*

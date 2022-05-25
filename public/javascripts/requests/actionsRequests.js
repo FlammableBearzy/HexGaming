@@ -39,7 +39,8 @@ async function postUpdateAttackCooldownByPlayer(playerId, actionId, cooldown)
         const response = await fetch(`/api/actions/${playerId}/inPlay`,
         {
             method: "POST",
-            headers: {"Content-Type": "application/json"}
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ actionID: actionId, cooldownID: cooldown})
         });
         if (response.status == 200)
         {
@@ -60,7 +61,7 @@ async function postResetCooldown(playerId)
     const response = await fetch(`/api/actions/${playerId}/ResetCooldowns`,
     {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json"}
         //body: JSON.stringify({ actionID: actionId, cooldownID: cooldown })
     });
 
@@ -73,6 +74,28 @@ async function postResetCooldown(playerId)
     }
 
     } catch (err) {
-        console.log(err)
+        console.log(err);
+    }
+}
+
+async function postTrapPlacing(playerId, roomId, attackId, parcelId)
+{
+    try {
+        const response = await fetch(`/api/actions/${playerId}/PlaceTraps`,
+        {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({ roomID: roomId, attackID: attackId, parcelID: parcelId })
+        });
+
+        if (response.status == 200)
+        {
+            var action = await response.json();
+            return action;
+        } else {
+            console.log(response);
+        }
+    } catch (err) {
+        console.log(err);
     }
 }

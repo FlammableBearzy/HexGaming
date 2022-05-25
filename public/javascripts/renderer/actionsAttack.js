@@ -1,3 +1,4 @@
+
 let ActionID;
 let ActionName;
 
@@ -5,17 +6,20 @@ let PlayerID;
 let IngameAction;
 let IngameCooldown;
 
+let iniCard;
+
 const imgCenterVertical = 0.4;
 const imgRelWidth = 0.6;
 const textCenterVertical = 0.8;
 
 
 class Attacks {
-    constructor(width, height, x, y, cooldown, action){
+    constructor(width, height, x, y, id, cooldown, action){
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
+        this.id = id;
         this.cooldown = cooldown;
         this.action = action;
     };
@@ -38,27 +42,11 @@ class Attacks {
     static initImgs(imgHash){
         Attacks.attackImage = imgHash;
     };
-/*
-    static async GetCurrentActionsInGame()
-    {
-        let actions = await getUpdateAttackCooldown();
 
-        for (let i of actions)
-        {
-            PlayerID = i.att_ig_player_id;
-            IngameAction = i.att_ig_action_id;
-            IngameCooldown = i.att_ig_cooldown
-
-            console.log(i.att_ig_player_id, i.att_ig_action_id, i.att_ig_cooldown);
-        
-        }
-    }IngameCooldown != undefined
-*/
-
-    pepo() {
+    drawBase() {
         //console.log("ActionAttack Drawn Called")
         //console.log ("Prior If " + this.action);        
-        if (this != undefined && Attacks.attackImage != undefined)
+        if (this != undefined && Attacks.attackImage != undefined && this.id != undefined)
         {
             //console.log(this.action);
             //if(this.action)
@@ -74,6 +62,11 @@ class Attacks {
                 textAlign(CENTER,CENTER);
                 textSize(30);
                 text(this.action,this.x+this.width/2,this.y+this.height*3/2*textCenterVertical);
+
+                textSize(12);
+                textAlign(LEFT);
+
+                //console.log(this.id);
             }
         }
         else {
@@ -81,22 +74,37 @@ class Attacks {
         };
     };
 
-    setAction(action)
+    static async StartingActions(id)
     {
-        //this.cooldown = att_action_cooldown;
-        this.action = action;
+        console.log(id);
+        iniCard = await postResetActions(id);
+        console.log(postResetActions(1));
+        return iniCard;
     };
 
-    getAction()
+    static async UpdateActionsPerRound(id, action, cooldown)
     {
-        return this.action;
-    };
+        let iniCard = await postUpdateCooldownByPlayer(id, action, cooldown);
+        if( cooldown != undefined )
+        {
+            if( cooldown == att_action_cooldown)
+            {
+                PlayableCard = true;
+            } else {
+                cooldown++;
+                PlayableCard = false;
+            }
+            console.log(cooldown);
+        }
+
+    }
+
 
     clicked(x, y)
     {
         if(x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height))
         {
-            console.log("This has been pressed");
+            console.log("This has been pressed " + this.action);
         }    
     };
 }

@@ -1,3 +1,7 @@
+//Canvas relatable
+const width = 1000;
+const height = 600;
+
 //Board Related
 let boardClass;
 let newBoard = [];
@@ -20,6 +24,12 @@ let leftArrow;
 let rightArrow;
 let movementClass;
 
+//Attacks
+let attack = [];
+let card1;
+let card2;
+let card3;
+
 //Buttons
 let choosePlayer1;
 let choosePlayer2;
@@ -35,6 +45,13 @@ let parcela = null;
 
 let cookies;
 
+function preload() {
+  Attacks.preloadAction();
+    card1 = new Attacks(100,100,200,800,1,6,1);
+    card2 = new Attacks(100,100,300,800,1,6,2);
+    card3 = new Attacks(100,100,400,800,1,10,3);
+}
+
 function setup() {
   
   createCanvas(windowWidth, windowHeight);
@@ -47,7 +64,7 @@ function setup() {
   player[2] = new playerCreator(newBoard[18], 150, "Red", 2);
   turnsClass = new turn(1200,50, 200, player);
   Movement.StartGame(0, newBoard);
-
+  //Attacks.StartingActions(1);
   
 
   //movementClass = new Movement(player[playerRoomId].id, turnsClass);
@@ -92,8 +109,14 @@ function draw() {
 
   if(movementClass != null && resultTurn[1].id == playerRoomId)
   canClick = movementClass.movement(newBoard, movementButtonArray, player,canClick);
-  if(mouseIsPressed == false){
-    canClick = true};
+  if(mouseIsPressed == false)
+  {
+    canClick = true
+  };
+
+    card1.drawBase();
+    card2.drawBase();
+    card3.drawBase();
 }
 
 
@@ -112,6 +135,7 @@ function Selector(){
     canClick = false;
   }
 }
+
 function Builder(){
   turnsClass.builder();
 
@@ -133,6 +157,13 @@ function Builder(){
   choosePlayer2.buttonBuilder()
   reset.buttonBuilder()
   console.log(cookies)
+}
+
+function mouseClicked()
+{
+  card1.clicked(mouseX, mouseY);
+  card2.clicked(mouseX, mouseY);
+  card3.clicked(mouseX, mouseY);
 }
 
 function timerRefreshPage(){
