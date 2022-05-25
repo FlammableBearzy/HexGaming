@@ -72,10 +72,13 @@ async function matchMake(){
             method: "POST",
             headers: {"Content-Type": "application/json"},
         });
-        if (response.status == 200)
+        console.log("Responding1");
+        if (response.status == 200 || response.status == 202)
         {
-            var roomId = await response.json();
-            return roomId;   
+            console.log("Responding2");
+            var status = await response.status;
+            console.log(status);
+            return status;   
         } else {
             //Trear errors like 404 here
             console.log(response);

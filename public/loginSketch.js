@@ -10,6 +10,9 @@ let isLogined = false;
 let canDrawMatchMaking = false;
 let matchMakingText;
 let pendingMatch = false;
+let cookies = null;
+let roomIdStatus = 0;
+
 
 
 function setup(){
@@ -40,7 +43,7 @@ function draw()
     if(playerIdentifier != null && !isLogined)
     {
         window.alert("Login successful");
-        //window.location.href = "game.html";
+        
         isLogined = true;
         canDrawMatchMaking = true;
         pendingMatch = true;
@@ -52,11 +55,14 @@ function draw()
         username.position(windowWidth *2, windowHeight);
         password.position(windowWidth *2, windowHeight);
         createCanvas(windowWidth, windowHeight);
+        pendingMatch = true;
         
         canDrawMatchMaking = false;
     }
     if(pendingMatch){
-
+        if(cookies != null)
+            if(cookies.roomId != null)
+                window.location.href = "game.html";
     }
 }
 
@@ -75,6 +81,15 @@ class LoginClass{
         window.alert(canLogin.msg);
     }
 }
+setInterval(async function(){
+    if(pendingMatch){
+        await Tinder.getARoom();
+        if(cookies == null && roomIdStatus.rowCount > 0){
+            console.log("Cookie monster aproching");
+            cookies = await ChipsAhoy.getMeCookies();
+        }
+    }
+},1000);
 
 class Tinder
 {
@@ -84,14 +99,12 @@ class Tinder
         console.log("In message:" + msg);
         if(msg != null){
             console.log("Trying to call matchmaker");
-           let msg2 = await matchMake();
-           console.log(msg2);
+            await matchMake();
         }
     }
     static async getARoom()
     {
-        let roomId = await getRoomById();
-    
+        if(pendingMatch)
+        roomIdStatus = await getRoomById();
     }
-
 }

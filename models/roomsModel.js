@@ -21,7 +21,7 @@ module.exports.getAllRooms = async function(){
     }
 }
 
-module.exports.getGameByID = async function (id) {
+/*module.exports.getGameByID = async function (id) {
     try {
         let sql = `Select * from room where room_game_id = $1;`;
         let result = await pool.query(sql, [id]);
@@ -35,7 +35,7 @@ module.exports.getGameByID = async function (id) {
         console.log(err);
         return { status: 500, result: err};
     }
-};
+};*/
 
 module.exports.play = async function (id ,player, parsel, direction) {
     try{
@@ -216,12 +216,10 @@ module.exports.matchMaking = async function () {
 }
 module.exports.getRoomById = async function (id) {
     try{
-        let sql = "Select * from room where room_player1_id = $1 OR room_player2_id = $1"
+
+        let sql = "Select room_id from room where room_player1_id = $1 OR room_player2_id = $1"
         let result2 = await pool.query(sql,[id])
-        if(result2 != undefined)
         return{status:200, result: result2}
-        else
-        return{status:400, msg: "No room found!"}
         
     } catch (err) {
         console.log(err);
