@@ -22,6 +22,11 @@ module.exports.saveUserId = function (res,userId) {
     res.cookie("userId", userId, {  maxAge: tokenExpiration, httpOnly: true, signed:true });
 }
 
+module.exports.saveRoomId = function (res,roomId) {    
+    console.log("I'm in roomId: " + roomId);
+    res.cookie("roomId", roomId, {  maxAge: tokenExpiration, httpOnly: true, signed:true });
+}
+
 module.exports.logout = function (res) {
     res.clearCookie("userId", {  httpOnly: true, signed:true});
 }

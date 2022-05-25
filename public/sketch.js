@@ -74,7 +74,9 @@ function setup() {
   timerRefreshPage();
 
  
-  ChipsAhoy.getMeCookies();
+  let promise = ChipsAhoy.getMeCookies();
+  promise.then(value => cookies = value);
+  
 }
 
 function draw() {
@@ -151,16 +153,7 @@ function timerRefreshPage(){
   }, 2000);
   
 }
-class ChipsAhoy{
-  static async getMeCookies()
-  {
-    let temp;
-    temp = await getCookies();
-    if(temp != null){
-      cookies = temp;
-    }
-  }
-}
+
   
 
 

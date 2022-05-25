@@ -1,4 +1,5 @@
 
+
 async function getRoom(gameId) {
     try {
         const response = await fetch(`/api/rooms/${gameId}`);
@@ -40,6 +41,54 @@ async function play(playerId, parselId, gameId, direction){
         console.log(err);
     }
 }
+async function enqueue(){
+    try {
+        const response = await fetch(`/api/rooms/enqueue`,
+        {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({})
+        });
+        console.log(response.status);
+        if (response.status == 200)
+        {
+            return "Success";   
+        } else {
+            //Trear errors like 404 here
+            console.log(response);
+        }
+    } catch (err){
+        //Treat 500 errors here
+        console.log(err);
+    }
+}
+
+
+async function matchMake(){
+    try {
+        console.log("We entered the play function");
+        const response = await fetch(`/api/rooms/matchMaking`,
+        {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+        });
+        console.log("Responding1");
+        if (response.status == 200 || response.status == 202)
+        {
+            console.log("Responding2");
+            var status = await response.status;
+            console.log(status);
+            return status;   
+        } else {
+            //Trear errors like 404 here
+            console.log(response);
+        }
+    } catch (err){
+        //Treat 500 errors here
+        console.log(err);
+    }
+}
+
 async function turnChanger(roomId){
         try {
             console.log("In roomRequests");
@@ -61,4 +110,23 @@ async function turnChanger(roomId){
             //Treat 500 errors here
             console.log(err);
         }
+}
+
+async function getRoomById() 
+{
+    try {
+        const response = await fetch(`/api/rooms/getRoomById`);
+        console.log("There was an input with mouse");
+        if (response.status == 200)
+        {
+            var room = await response.json();
+            return room;  
+        } else {
+            //Trear errors like 404 here
+            console.log(response);
+        }
+    } catch (err){
+        //Treat 500 errors here
+        console.log(err);
+    }
 }

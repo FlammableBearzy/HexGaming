@@ -20,6 +20,7 @@ router.post('/', async function(req, res, next){
     }
     res.status(result.status).send(result.result);
 });
+
 router.post('/register', async function(req, res, next){
     
     let user = req.body.username;
