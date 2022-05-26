@@ -45,11 +45,10 @@ router.post('/matchMaking', async function(req,res, next){
     res.sendStatus(result.status);
 });
 router.get('/getRoomById', async function(req, res, next) {
-    let id = 9;
+    let id = req.signedCookies.userId;
     console.log("Get game with id "+id)
 
     let result = await rModel.getRoomById(id);
-    console.log(result.result);
     if(result.result.rowCount > 0)
     aut.saveRoomId(res,result.result.rows[0].room_id);
     res.status(result.status).send(result.result);
