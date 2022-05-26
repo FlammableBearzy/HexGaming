@@ -226,6 +226,18 @@ module.exports.getRoomById = async function (id) {
         return { status: 420, result: err };
     }
 }
+module.exports.getTurns = async function (id) {
+    try{
+        console.log("Room id:" + id);
+        let sql = "Select room_turns from room where room_id = $1"
+        let result2 = await pool.query(sql,[id])
+        return{status:200, result: result2}
+        
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
 
 class Queue2
 {

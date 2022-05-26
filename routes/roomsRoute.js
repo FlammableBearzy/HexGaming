@@ -30,6 +30,12 @@ router.post('/turnChanger', async function(req,res, next){
     let result = await rModel.turnChanger(id);
     res.status(result.status).send(result.result);
 });
+router.get('/getTurn', async function(req,res, next){
+    id = 20;//req.signedCookies.roomId;
+    console.log("We are sending: "+id);
+    let result = await rModel.getTurns(id);
+    res.status(result.status).send(result.result);
+});
 
 router.post('/enqueue', async function(req,res, next){
     let id = req.signedCookies.userId;

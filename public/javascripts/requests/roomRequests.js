@@ -19,10 +19,10 @@ async function getRoom(gameId) {
 }
 
 
-async function play(parselId, roomId, direction){
+async function play(parselId, direction){
     try {
         console.log("We entered the play function");
-        const response = await fetch(`/api/rooms/${roomId}/plays`,
+        const response = await fetch(`/api/rooms/1/plays`,
         {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -88,6 +88,30 @@ async function matchMake(){
         console.log(err);
     }
 }
+async function getTurn(){
+    try {
+        console.log("In roomRequests");
+        const response = await fetch(`/api/rooms/getTurn`,
+        {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ id: roomId })
+        });
+        if (response.status == 200)
+        {
+            var turn = await response.json();
+            return turn;   
+        } else {
+            //Trear errors like 404 here
+            console.log(response);
+        }
+    } catch (err){
+        //Treat 500 errors here
+        console.log(err);
+    }
+}
+
+
 
 async function turnChanger(roomId){
         try {

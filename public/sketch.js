@@ -1,3 +1,12 @@
+<<<<<<< Updated upstream
+=======
+
+
+//Canvas relatable
+const width = 1000;
+const height = 600;
+
+>>>>>>> Stashed changes
 //Board Related
 let boardClass;
 let newBoard = [];
@@ -29,6 +38,8 @@ let canClick = true;
 
 //turn
 let turnsClass;
+let canPlay;
+let currentTurn;
 
 let tester = false;
 let parcela = null;
@@ -46,9 +57,16 @@ function setup() {
   player[1] =new playerCreator(newBoard[1], 150, "Blue",1);
   player[2] = new playerCreator(newBoard[18], 150, "Red", 2);
   turnsClass = new turn(1200,50, 200, player);
+<<<<<<< Updated upstream
   Movement.StartGame(0, newBoard);
 
   
+=======
+  //Movement.StartGame(0, newBoard);
+  console.log("Before Starting");
+  Attacks.StartingActions(1); //insert player ID here
+  console.log("After Starting");
+>>>>>>> Stashed changes
 
   //movementClass = new Movement(player[playerRoomId].id, turnsClass);
   
@@ -76,7 +94,7 @@ function setup() {
  
   let promise = ChipsAhoy.getMeCookies();
   promise.then(value => cookies = value);
-  
+  TurnManager.getTurns();  
 }
 
 function draw() {
@@ -92,20 +110,28 @@ function draw() {
 
   if(movementClass != null && resultTurn[1].id == playerRoomId)
   canClick = movementClass.movement(newBoard, movementButtonArray, player,canClick);
+<<<<<<< Updated upstream
   if(mouseIsPressed == false){
     canClick = true};
+=======
+  if(mouseIsPressed == false)
+  {
+    canClick = true
+  };
+
+    card1.drawBase();
+    card2.drawBase();
+    card3.drawBase();
+    
+  if(cookies != null)
+  {
+    playerRoomId = cookies.userId;
+  }
+>>>>>>> Stashed changes
 }
 
 
 function Selector(){
-  if(choosePlayer1.clicker(mouseX, mouseY, canClick && mouseIsPressed) && playerRoomId == null){
-    playerRoomId = 1;
-    canClick = false;
-  }
-  if(choosePlayer2.clicker(mouseX, mouseY, canClick && mouseIsPressed) && playerRoomId == null){
-    playerRoomId = 2;
-    canClick = false;
-  }
   if(reset.clicker(mouseX, mouseY, canClick && mouseIsPressed) && playerRoomId == null){
     console.log("NEXT SCENE!");
     window.location.href = "loginScene.html";
@@ -132,7 +158,18 @@ function Builder(){
   choosePlayer1.buttonBuilder()
   choosePlayer2.buttonBuilder()
   reset.buttonBuilder()
+<<<<<<< Updated upstream
   console.log(cookies)
+=======
+  
+}
+
+function mouseClicked()
+{
+  card1.clicked(mouseX, mouseY);
+  card2.clicked(mouseX, mouseY);
+  card3.clicked(mouseX, mouseY);
+>>>>>>> Stashed changes
 }
 
 function timerRefreshPage(){
@@ -151,9 +188,16 @@ function timerRefreshPage(){
     player[2].playerPlacer(newBoard[posArray[1]]);
   }
   }, 2000);
-  
 }
 
+class TurnManager
+{
+  static async getTurns()
+  {
+      let turnsGet = await getTurn();
+      console.log(turnsGet);
+  }
+}
   
 
 

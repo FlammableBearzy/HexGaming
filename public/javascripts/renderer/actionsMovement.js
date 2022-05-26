@@ -29,7 +29,7 @@ class Movement {
         
         let id = await this.GetCurrentParcel(1);
         if(id != null){
-          parcel = await play(1,id,1, direction);
+          parcel = await play(id,1, direction);
           console.log(thisMovement.id);
           player[thisMovement.id].playerPlacer(newBoard[id + direction]);
           return parcel;
@@ -62,6 +62,7 @@ class Movement {
         }
         if(rightArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)&& (player[this.id].parcel.parcelId) % boardWidth != 0){
           Movement.UpdateDirection(1, newBoard, player, this);
+          console.log("Clicked right");
           return false;
         }
         if(leftArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed) && (player[this.id].parcel.parcelId - 1) % boardWidth != 0){
