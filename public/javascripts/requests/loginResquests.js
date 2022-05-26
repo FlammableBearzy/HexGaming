@@ -62,3 +62,4 @@ async function getCookies() {
         console.log(err);
     }
 }
+

@@ -17,12 +17,11 @@ router.get('/', async function(req, res, next){
 });*/
 
 router.post('/:id/plays', async function(req, res, next) {
-    let id = req.params.id;
-    let playerID = req.body.playerID;
+    let playerID = req.signedCookies.userId;
     let parselID = req.body.parselID;
     let direction = req.body.direction;
     console.log(`Played ${playerID} on parsel ${parselID} on the room with id ${id}`);
-    let result = await rModel.play(id, playerID, parselID, direction);
+    let result = await rModel.play(playerID, parselID, direction);
     res.status(result.status).send(result.result);
 });
 router.post('/turnChanger', async function(req,res, next){

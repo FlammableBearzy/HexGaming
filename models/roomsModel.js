@@ -37,7 +37,7 @@ module.exports.getAllRooms = async function(){
     }
 };*/
 
-module.exports.play = async function (id ,player, parsel, direction) {
+module.exports.play = async function (player, parsel, direction) {
     try{
         if (!parseInt(id))
         {
@@ -56,8 +56,8 @@ module.exports.play = async function (id ,player, parsel, direction) {
         //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
         //let result = await pool.query(sql, [id, player, parsel]);
 
-        let sqlr = `Select * from room, moveAction where room.room_game_id = $1;`;
-        let resultr = await pool.query(sqlr, [id]);
+        let sqlr = `Select * from moveAction where mov_player_id = $1;`;
+        let resultr = await pool.query(sqlr, [player]);
         let room = resultr.rows[0];
         if (!room)
         {
@@ -216,7 +216,7 @@ module.exports.matchMaking = async function () {
 }
 module.exports.getRoomById = async function (id) {
     try{
-
+        console.log("Player id:" + id);
         let sql = "Select room_id from room where room_player1_id = $1 OR room_player2_id = $1"
         let result2 = await pool.query(sql,[id])
         return{status:200, result: result2}

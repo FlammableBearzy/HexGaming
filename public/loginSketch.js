@@ -16,6 +16,7 @@ let roomIdStatus = 0;
 
 
 function setup(){
+
     createCanvas(windowWidth, windowHeight);
     username = createInput('Username');
     password = createInput('Password');
@@ -84,6 +85,7 @@ class LoginClass{
 setInterval(async function(){
     if(pendingMatch){
         await Tinder.getARoom();
+        console.log(roomIdStatus.rowCount);
         if(cookies == null && roomIdStatus.rowCount > 0){
             console.log("Cookie monster aproching");
             cookies = await ChipsAhoy.getMeCookies();
@@ -106,5 +108,6 @@ class Tinder
     {
         if(pendingMatch)
         roomIdStatus = await getRoomById();
+        console.log(roomIdStatus);
     }
 }
