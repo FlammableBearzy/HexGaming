@@ -39,8 +39,7 @@ module.exports.getAllRooms = async function(){
 
 module.exports.play = async function (player, parsel, direction) {
     try{
-        if (!parseInt(id))
-        {
+        
             if(!parseInt(player) && !parseInt(parseInt))
             {
                 console.log("This player: " + player + " and this parsel: " + parsel);
@@ -48,11 +47,9 @@ module.exports.play = async function (player, parsel, direction) {
                     status: 400,
                     result: { msg: "This player: " + player + ", This parsel: " + parsel}
                 };
+                //return { status: 400, result: { msg: "Room id must be a number" } };    
             }
-            console.log("This room id is: " + id);
-            return { status: 400, result: { msg: "Room id must be a number" } };           
-        }
-
+                   
         //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
         //let result = await pool.query(sql, [id, player, parsel]);
 
