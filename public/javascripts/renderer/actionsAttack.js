@@ -6,8 +6,6 @@ let PlayerID;
 let IngameAction;
 let IngameCooldown;
 
-let iniCard;
-
 const imgCenterVertical = 0.4;
 const imgRelWidth = 0.6;
 const textCenterVertical = 0.8;
@@ -76,26 +74,31 @@ class Attacks {
 
     static async StartingActions(id)
     {
-        console.log(id);
-        iniCard = await postResetActions(id);
-        console.log(postResetActions(1));
+        let iniCard = await postResetCooldown(id);
+        //console.log(iniCard);
         return iniCard;
     };
 
     static async UpdateActionsPerRound(id, action, cooldown)
     {
-        let iniCard = await postUpdateCooldownByPlayer(id, action, cooldown);
+        console.log("UpdateActionPerRound");
+        let iniCard = await postUpdateAttackCooldownByPlayer(id, action, cooldown);
         if( cooldown != undefined )
         {
+            console.log("Inside first if");
             if( cooldown == att_action_cooldown)
             {
+                console.log("if they match");
                 PlayableCard = true;
             } else {
+                console.log("if they dont match");
                 cooldown++;
                 PlayableCard = false;
             }
             console.log(cooldown);
         }
+        console.log("iniCard");
+        return iniCard;
 
     }
 
@@ -105,6 +108,7 @@ class Attacks {
         if(x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height))
         {
             console.log("This has been pressed " + this.action);
+            Attacks.UpdateActionsPerRound(2, 1, 5)
         }    
     };
 }

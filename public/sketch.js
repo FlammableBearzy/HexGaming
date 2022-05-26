@@ -47,9 +47,9 @@ let cookies;
 
 function preload() {
   Attacks.preloadAction();
-    card1 = new Attacks(100,100,200,800,1,6,1);
-    card2 = new Attacks(100,100,300,800,1,6,2);
-    card3 = new Attacks(100,100,400,800,1,10,3);
+    card1 = new Attacks(100,100,200,800,2,6,1);
+    card2 = new Attacks(100,100,300,800,2,6,2);
+    card3 = new Attacks(100,100,400,800,2,10,3);
 }
 
 function setup() {
@@ -64,8 +64,9 @@ function setup() {
   player[2] = new playerCreator(newBoard[18], 150, "Red", 2);
   turnsClass = new turn(1200,50, 200, player);
   Movement.StartGame(0, newBoard);
-  //Attacks.StartingActions(1);
-  
+  console.log("Before Starting");
+  Attacks.StartingActions(1); //insert player ID here
+  console.log("After Starting");
 
   //movementClass = new Movement(player[playerRoomId].id, turnsClass);
   
@@ -97,6 +98,7 @@ function setup() {
 }
 
 function draw() {
+  background(100);
   //resultTurn is a global variable present on the turns class. turns is declared in the set up
   if(resultTurn[1] != null && resultTurn[1].id == playerRoomId)
   {
@@ -156,7 +158,7 @@ function Builder(){
   choosePlayer1.buttonBuilder()
   choosePlayer2.buttonBuilder()
   reset.buttonBuilder()
-  console.log(cookies)
+  //console.log(cookies)
 }
 
 function mouseClicked()

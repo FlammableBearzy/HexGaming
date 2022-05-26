@@ -91,9 +91,7 @@ module.exports.postUpdateCooldownByPlayer = async function(id, action, cooldown)
                 }
                 return {
                     status: 200,
-                    result: {
-                        msg: "You posted!"
-                    }
+                    result: attInGame
                 };
             }
     
@@ -112,9 +110,9 @@ module.exports.postResetActions = async function(id){
         if (!attInGame){
             return { status: 404, result: {msg: "There's no player with that ID"}}
         } else {
-            let sqlU = "UPDATE attackInGame SET att_IG_cooldown = attackAction.att_action_cooldown FROM attackAction WHERE attackAction.att_action_id = attackInGame.att_IG_action_id;";
+            let sqlU = "UPDATE attackInGame SET att_IG_cooldown = attackAction.att_action_cooldown FROM attackAction WHERE attackAction.att_action_id = attackInGame.att_IG_action_id and attackInGame.att_ig_player_id = $1;";
 
-            let resultU = await pool.query(sqlU);
+            let resultU = await pool.query(sqlU, [id]);
             if (resultU == undefined)
             {
                 return {
@@ -133,7 +131,7 @@ module.exports.postResetActions = async function(id){
             return {
                 status: 200,
                 result: {
-                    msg: "You posted!"
+                    msg: "You posted!", attInGame
                 }
             };
         }
