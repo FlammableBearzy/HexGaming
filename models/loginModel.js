@@ -38,6 +38,14 @@ module.exports.register = async function (username, password) {
             console.log("Arriving insert");
         let sqlr = `Insert Into player (player_name, player_pass, player_health) Values ($1, $2, 3)`;
         await pool.query(sqlr, [username, password]);
+        
+        let sql2 = `Select player_id from player where player_name = $1 AND player_pass = $2;`;
+        let result2 = await pool.query(sql2, [username, password]);
+        let playerid = result2.rows[0].player_id;
+
+        let sqlM = `Insert Into moveAction (mov_action_id,mov_player_id, mov_action_parselid) Values ($1,$1, 1)`;
+        await pool.query(sqlM, [playerid]);
+
         return {status: 200, result:{msg: "Player registered!"}};
     }
     } catch (err) {

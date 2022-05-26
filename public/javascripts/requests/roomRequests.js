@@ -19,14 +19,14 @@ async function getRoom(gameId) {
 }
 
 
-async function play(playerId, parselId, gameId, direction){
+async function play(parselId, roomId, direction){
     try {
         console.log("We entered the play function");
-        const response = await fetch(`/api/rooms/${gameId}/plays`,
+        const response = await fetch(`/api/rooms/${roomId}/plays`,
         {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ playerID: playerId, parselID: parselId, direction: direction})
+            body: JSON.stringify({parselID: parselId, direction: direction})
         });
         if (response.status == 200)
         {
