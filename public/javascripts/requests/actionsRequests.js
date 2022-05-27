@@ -15,6 +15,23 @@ async function getActions()
     }
 };
 
+async function GetPlayersPositions()
+{
+   try {
+       const response = await fetch(`/api/actions/parcels`);
+       
+       if (response.status == 200)
+        {
+           var actions = await response.json();
+           return actions;
+        } else {
+           console.log(response);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 async function getUpdateAttackCooldownByPlayer(playerId)
 {
     try {
@@ -31,6 +48,8 @@ async function getUpdateAttackCooldownByPlayer(playerId)
         console.log(err);
     }
 }
+
+
 
 async function postUpdateAttackCooldownByPlayer(playerId, actionId, cooldown)
 {
@@ -74,6 +93,29 @@ async function postResetCooldown(playerId)
     }
 
     } catch (err) {
+        console.log(err);
+    }
+}
+
+async function play(direction, cookie){
+    try {
+        console.log("We entered the play function");
+        const response = await fetch(`/api/actions/plays`,
+        {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({direction: direction, cookie : cookie})
+        });
+        if (response.status == 200)
+        {
+            var parsel = await response.json();
+            return parsel;   
+        } else {
+            //Trear errors like 404 here
+            console.log(response);
+        }
+    } catch (err){
+        //Treat 500 errors here
         console.log(err);
     }
 }

@@ -7,10 +7,7 @@ let parcel;
 let res;
 
 class Movement {
-    constructor(id)
-    {
-        this.id = id; 
-    }
+    
     static async GetCurrentParcel(id)
     {
         let action = await getActions();
@@ -24,16 +21,15 @@ class Movement {
           }
         }        
     }; 
-    static async UpdateDirection(direction, newBoard, player, thisMovement)
+    static async GetPlayerPositions()
     {
-        
-        let id = await this.GetCurrentParcel(1);
-        if(id != null){
-          parcel = await play(1,id,1, direction);
-          console.log(thisMovement.id);
-          player[thisMovement.id].playerPlacer(newBoard[id + direction]);
-          return parcel;
-        }
+      let parcels = await GetPlayersPositions();
+      //console.log(parcels);
+      return parcels;
+    }
+    static async UpdateDirection(direction, cookie)
+    {
+        await play(direction, cookie)
     }; 
     static async StartGame(id,newBoard)
     {
@@ -49,7 +45,7 @@ class Movement {
         return [parcelID1, parcelID2];
     } 
     
-    movement(board, arrows,player, canClick){
+    movement(board, arrows,player, canClick, cookie){
         let upArrow = arrows[0];
         let downArrow = arrows[1];
         let leftArrow = arrows[2];
@@ -57,19 +53,24 @@ class Movement {
         let newBoard = board;
         if(upArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
           //player[this.id].playerPlacer(newBoard[player[this.id].parcel.parcelId - boardWidth]);
-          Movement.UpdateDirection(-boardWidth, newBoard, player, this);
+          Movement.UpdateDirection("Up", cookie);
+         
           return false;
         }
-        if(rightArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)&& (player[this.id].parcel.parcelId) % boardWidth != 0){
-          Movement.UpdateDirection(1, newBoard, player, this);
+        if(rightArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
+          Movement.UpdateDirection("Right", cookie);
+          console.log("Clicked right");
+          
           return false;
         }
-        if(leftArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed) && (player[this.id].parcel.parcelId - 1) % boardWidth != 0){
-          Movement.UpdateDirection(-1, newBoard, player, this);
+        if(leftArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
+          Movement.UpdateDirection("Left", cookie);
+          
           return false;
         }
         if(downArrow.clicker(mouseX, mouseY, canClick && mouseIsPressed)){
-          Movement.UpdateDirection(boardWidth, newBoard, player, this);
+          Movement.UpdateDirection("Down", cookie);
+         
           return false;
         }
       }

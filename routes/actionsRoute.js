@@ -11,11 +11,25 @@ router.get('/', async function(req, res, next){
     else
     console.log("Status1: " + result.status + " Status2: " + result2.status);
 });
-
+router.post('/plays', async function(req, res, next) {
+    
+    let direction = req.body.direction;
+    let cookies = req.body.cookie
+    let id = cookies.userId;
+    let result = await aModel.play(id, direction);
+    res.status(result.status).send(result.result);
+});
 router.get('/:id/inPlay', async function(req, res, next){
     let id = req.params.id;
     console.log(`Get the player with id ${id} so we can update its cards`);
     let result = await aModel.getAttackInGameByPlayer(id);
+    res.status(result.status).send(result.result);
+});
+
+router.get('/parcels', async function(req, res, next){
+    console.log("In parcels");
+    let id = req.signedCookies.roomId;
+    let result = await aModel.getParcels(id);
     res.status(result.status).send(result.result);
 });
 

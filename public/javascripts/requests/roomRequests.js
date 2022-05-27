@@ -18,20 +18,14 @@ async function getRoom(gameId) {
     }
 }
 
-
-async function play(parselId, roomId, direction){
+async function getTurn(){
     try {
-        console.log("We entered the play function");
-        const response = await fetch(`/api/rooms/${roomId}/plays`,
-        {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({parselID: parselId, direction: direction})
-        });
+        console.log("In roomRequests");
+        const response = await fetch(`/api/rooms/getTurn`);
         if (response.status == 200)
         {
-            var parsel = await response.json();
-            return parsel;   
+            var turn = await response.json();
+            return turn;   
         } else {
             //Trear errors like 404 here
             console.log(response);
@@ -41,6 +35,9 @@ async function play(parselId, roomId, direction){
         console.log(err);
     }
 }
+
+
+
 async function enqueue(){
     try {
         const response = await fetch(`/api/rooms/enqueue`,
@@ -89,14 +86,14 @@ async function matchMake(){
     }
 }
 
-async function turnChanger(roomId){
+async function turnChanger(cookie){
         try {
             console.log("In roomRequests");
-            const response = await fetch(`/api/rooms/${roomId}/turnChanger`,
+            const response = await fetch(`/api/rooms/turnChanger`,
             {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ id: roomId })
+                body: JSON.stringify({ cookie:cookie})
             });
             if (response.status == 200)
             {

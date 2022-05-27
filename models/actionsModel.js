@@ -13,6 +13,94 @@ module.exports.getAllMoveActions = async function() {
     }
 };
 
+module.exports.play = async function (id, direction) {
+    try{
+        let sql2 = `Select room_lastturnplayer_id from room where room_player1_id = $1 OR room_player2_id = $1`
+        let result2 = await pool.query(sql2, [id]);
+        if(id == result2.rows[0].room_lastturnplayer_id ){
+        let sql = `Select * from moveAction where mov_player_id = $1;`;
+        let result = await pool.query(sql, [id]);
+        let movInfo = result.rows[0];
+        if (!movInfo)
+        {
+            return { status: 404, result: { msg: "No room with that id" } };
+        } else {
+            let addtion = 0;
+            if(direction == "Up") addtion = -6;
+            else
+            if(direction == "Down") addtion = 6;
+            else
+            if(direction == "Left") addtion = -1;
+            else
+            if(direction == "Right") addtion = 1;
+            else 
+            return{status: 400, msg:"Invalid Direction"};           
+            let parcel = movInfo.mov_action_parselid + addtion;
+            if(parcel > 18 || parcel < 1) return{status: 400, msg:"Invalid Direction"};
+
+            if((direction == "Right" && (movInfo.mov_action_parselid == 6 ||movInfo.mov_action_parselid == 12)) || (direction == "Left" && (movInfo.mov_action_parselid == 1 ||movInfo.mov_action_parselid == 7 || movInfo.mov_action_parselid == 13)))
+            return{status: 400, msg:"Invalid Direction"};
+
+            let sqlU = "UPDATE moveAction SET mov_action_parselId = $2 WHERE mov_player_id = $1;";     
+            let resultU = await pool.query(sqlU, [id, parcel]);
+            console.log(resultU);
+        
+            if(resultU == undefined)
+            {
+                return {
+                status : 404,
+                result : {msg : "Something is missing"}
+                };
+            }
+
+            if (resultU.rowCount == 0)
+            {
+                return {
+
+                status : 500,
+                result : {msg : "The updated failed"}
+            };
+        }
+        return {
+            status: 200,
+            result: {
+                msg: "You posted!"
+            }
+          };
+            //return { status: 200, result: { msg: "You've entered the room" } };    
+        }
+    } else return {status: 400, msg:"Not your turn"}
+
+        
+        //let resultU = await pool.query(sqlU, [player, parsel],(arg) => promise(arg));
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
+
+
+module.exports.getParcels = async function(id) {
+    try {
+        let sql = `Select * from room where room_id = $1`;
+        let result = await pool.query(sql, [id]);
+        if(result != undefined)
+        {
+            let id1 = result.rows[0].room_player1_id;
+            let id2 = result.rows[0].room_player2_id;
+            let sql2 = `Select * from moveAction where mov_player_id = $1 OR  mov_player_id = $2`;
+            let result2 = await pool.query(sql2, [id1,id2]);
+            if(result2 == undefined)
+            return{status: 404, msg: "Players not found"};
+            return {status:200, result: result2};
+        }
+        else return {status:404, msg: "Room not found"};
+    } catch (err) {
+        console.log(err);
+        return { status: 500, result: err};
+    }
+};
+
 module.exports.getAllAttackActions = async function(){
     try {
         let sql = `Select * from attackAction`;

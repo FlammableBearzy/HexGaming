@@ -37,71 +37,10 @@ module.exports.getAllRooms = async function(){
     }
 };*/
 
-module.exports.play = async function (player, parsel, direction) {
-    try{
-        
-            if(!parseInt(player) && !parseInt(parseInt))
-            {
-                console.log("This player: " + player + " and this parsel: " + parsel);
-                return {
-                    status: 400,
-                    result: { msg: "This player: " + player + ", This parsel: " + parsel}
-                };
-                //return { status: 400, result: { msg: "Room id must be a number" } };    
-            }
-                   
-        //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
-        //let result = await pool.query(sql, [id, player, parsel]);
 
-        let sqlr = `Select * from moveAction where mov_player_id = $1;`;
-        let resultr = await pool.query(sqlr, [player]);
-        let room = resultr.rows[0];
-        if (!room)
-        {
-            return { status: 404, result: { msg: "No room with that id" } };
-        } else {
-            let sqlU = "UPDATE moveAction SET mov_action_parselId = $2 WHERE mov_player_id = $1;";
-        console.log(player);
-        console.log(parsel);
-        console.log(direction);
-        parsel = parsel + direction;
-        let resultU = await pool.query(sqlU, [player, parsel]);
-            console.log(resultU);
-       if(resultU == undefined)
-        {
-            return {
-                status : 404,
-                result : {msg : "Something is missing"}
-            };
-        }
-
-        if (resultU.rowCount == 0)
-        {
-            return {
-
-                status : 500,
-                result : {msg : "The updated failed"}
-            };
-        }
-        return {
-            status: 200,
-            result: {
-                msg: "You posted!"
-            }
-          };
-            //return { status: 200, result: { msg: "You've entered the room" } };    
-        }
-
-        
-        //let resultU = await pool.query(sqlU, [player, parsel],(arg) => promise(arg));
-    } catch (err) {
-        console.log(err);
-        return { status: 420, result: err };
-    }
-}
 module.exports.turnChanger = async function (id) {
     try{
-        
+        console.log(id);
         if (!parseInt(id)){
 
             return { status: 400, result: { msg: "Room id must be a number" } };           
@@ -109,10 +48,10 @@ module.exports.turnChanger = async function (id) {
 
         //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
         //let result = await pool.query(sql, [id, player, parsel]);
-        let id2 = 1;
+        
         console.log(id);
-        let sqlr = `Select * from room where room_game_id = 1;`; // removed a room.room_game_id, and placed room_game_id;
-        let resultr = await pool.query(sqlr);
+        let sqlr = `Select * from room where room_id = $1;`; // removed a room.room_game_id, and placed room_game_id;
+        let resultr = await pool.query(sqlr,[id]);
         let room = resultr.rows[0].room_id;
         let currentTurn = resultr.rows[0].room_turns;
         console.log(room);
@@ -120,9 +59,20 @@ module.exports.turnChanger = async function (id) {
         {
             return { status: 404, result: { msg: "No room: "+ room + "; currentTurn: " + currentTurn}};
         } else {
+            
             let newTurn = currentTurn + 1;
-            let sqlU = "UPDATE room SET room_turns = $2 WHERE room_id = $1;";
-            let resultU = await pool.query(sqlU, [room, newTurn]);
+            let newPlayer = resultr.rows[0].room_lastturnplayer_id;
+            if(newTurn %2 == 0){
+                if(newPlayer == resultr.rows[0].room_player1_id){
+                    newPlayer = resultr.rows[0].room_player2_id
+                }
+                else
+                {
+                    newPlayer = resultr.rows[0].room_player1_id
+                }
+            }
+            let sqlU = "UPDATE room SET room_turns = $2, room_lastturnplayer_id = $3 WHERE room_id = $1;";
+            let resultU = await pool.query(sqlU, [room, newTurn, newPlayer]);
             console.log(resultU);
        if(resultU == undefined)
         {
@@ -140,14 +90,15 @@ module.exports.turnChanger = async function (id) {
                 result : {msg : "The updated failed"}
             };
         }
+        let sql2 = `Select * from room where room_id = $1;`; // removed a room.room_game_id, and placed room_game_id;
+        let result2 = await pool.query(sql2,[id]);
         return {
             status: 200,
-            result: {
-                msg: "You posted!"
-            }
+            result: {result: result2}
           };
             //return { status: 200, result: { msg: "You've entered the room" } };    
         }
+    
 
         
         //let resultU = await pool.query(sqlU, [player, parsel],(arg) => promise(arg));
@@ -198,7 +149,7 @@ module.exports.matchMaking = async function () {
             id1 = queue.dequeue();
             id2 = queue.dequeue();
             console.log("Enquing:" + id1 + " and " + id2);
-            let sql = "INSERT INTO room (room_state, room_player1_id, room_player2_id, room_turns) Values ('Playing', $1, $2, 0)"
+            let sql = "INSERT INTO room (room_state, room_player1_id, room_player2_id, room_turns, room_lastturnplayer_id) Values ('Playing', $1, $2, 0, $1)"
             await pool.query(sql, [id1, id2]);
             return {status: 200, msg: "Joined a room!"}
         }
@@ -211,6 +162,21 @@ module.exports.matchMaking = async function () {
         return { status: 420, result: err };
     }
 }
+
+module.exports.getTurns = async function (id) {
+    try{
+        console.log("Room id:" + id);
+        let sql = "Select room_turns, room_lastturnplayer_id from room where room_id = $1"
+        let result2 = await pool.query(sql,[id])
+        
+        return{status:200, result: result2}
+        
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
+
 module.exports.getRoomById = async function (id) {
     try{
         console.log("Player id:" + id);

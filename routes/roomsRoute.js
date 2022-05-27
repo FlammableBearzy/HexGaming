@@ -16,18 +16,21 @@ router.get('/', async function(req, res, next){
     res.status(result.status).send(result.result);
 });*/
 
-router.post('/:id/plays', async function(req, res, next) {
-    let playerID = req.signedCookies.userId;
-    let parselID = req.body.parselID;
-    let direction = req.body.direction;
-    console.log(`Played ${playerID} on parsel ${parselID}`);
-    let result = await rModel.play(playerID, parselID, direction);
+
+router.post('/turnChanger', async function(req,res, next){
+    console.log("I'm in turn changer!");
+    
+    let roomId = req.signedCookies.roomId;
+
+    console.log("We are sending: "+id);
+    let result = await rModel.turnChanger(roomId);
     res.status(result.status).send(result.result);
 });
-router.post('/turnChanger', async function(req,res, next){
-    let id = req.body.id;
+
+router.get('/getTurn', async function(req,res, next){
+    id = req.signedCookies.roomId;
     console.log("We are sending: "+id);
-    let result = await rModel.turnChanger(id);
+    let result = await rModel.getTurns(id);
     res.status(result.status).send(result.result);
 });
 
