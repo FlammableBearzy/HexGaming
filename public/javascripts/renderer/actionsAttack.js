@@ -6,8 +6,6 @@ let PlayerID;
 let IngameAction;
 let IngameCooldown;
 
-let PlayableCard = true;
-
 const imgCenterVertical = 0.4;
 const imgRelWidth = 0.6;
 const textCenterVertical = 0.8;
@@ -81,38 +79,26 @@ class Attacks {
         return iniCard;
     };
 
-    static async UpdateActionsPerRound(id, action)
+    static async UpdateActionsPerRound(id, action, cooldown)
     {
-        let iniCard = await postUpdateAttackCooldownByPlayer(id, action);
-        // if( cooldown != undefined )
-        // {
-        //     console.log(iniCard);
-        //     if(this.action = action)
-        //     {
-        //         for (let i of iniCard)
-        //         {
-        //             console.log(i);
-        //             //console.log(iniCard);
-        //             let actionCooldown = i.att_action_cooldown;
-        //             console.log("Inside first if");
-        //             if( this.cooldown == actionCooldown)
-        //             {
-        //                 console.log("if they match");
-        //                 PlayableCard = true;
-        //             } else {
-        //                 console.log("if they dont match");
-        //                 console.log(actionCooldown)
-        //                 cooldown++;
-        //                 console.log(cooldown);
-        //                 PlayableCard = false;
-        //             }
-        //             console.log("End");
-        //         }
-                return iniCard;
-        //  }
-
-        //}
-        //return [iniCard, this.cooldown];
+        console.log("UpdateActionPerRound");
+        let iniCard = await postUpdateAttackCooldownByPlayer(id, action, cooldown);
+        if( cooldown != undefined )
+        {
+            console.log("Inside first if");
+            if( cooldown == att_action_cooldown)
+            {
+                console.log("if they match");
+                PlayableCard = true;
+            } else {
+                console.log("if they dont match");
+                cooldown++;
+                PlayableCard = false;
+            }
+            console.log(cooldown);
+        }
+        console.log("iniCard");
+        return iniCard;
 
     }
 
@@ -122,7 +108,7 @@ class Attacks {
         if(x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height))
         {
             console.log("This has been pressed " + this.action);
-            Attacks.UpdateActionsPerRound(this.id, this.action, this.cooldown);
+            Attacks.UpdateActionsPerRound(2, 1, 5)
         }    
     };
 }
