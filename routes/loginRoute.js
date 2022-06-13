@@ -35,7 +35,7 @@ router.post('/register', async function(req, res, next){
 
 router.get('/cookieJar', async function(req, res, next) {
     console.log("Hello cookies!");
-    console.log(req.signedCookies);
+    console.log("Cookie user id: " +req.signedCookies.userId);
     res.status(200).send(req.signedCookies);
 });
 
