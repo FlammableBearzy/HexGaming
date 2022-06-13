@@ -132,18 +132,11 @@ module.exports.getAttackInGameByPlayer = async function(id)
     }
 }
 
-module.exports.postUpdateCooldownByPlayer = async function(id, action, cooldown){
+module.exports.postUpdateCooldownByPlayer = async function(id, action){
     try{
         if(!parseInt(action))
         {
-            if(!parseInt(cooldown))
-            {
-                console.log("This cooldown: " + cooldown);
-                return {
-                    status: 400,
-                    result: {msg: "This cooldown: " + cooldown}
-                };
-            }
+            
             consolo.log("This must be a number of the action: " + action + " of the player with id: " + id);
             return {
                 status: 400,
@@ -151,17 +144,42 @@ module.exports.postUpdateCooldownByPlayer = async function(id, action, cooldown)
             };
         }
 
-            let sqls = `select * from attackInGame where att_ig_player_id = $1;`;
+            let sqls = `select * from attackInGame join attackAction on att_action_id = att_ig_action_id where att_ig_player_id = $1;`;
             let result = await pool.query(sqls, [id]);
             let attInGame = result.rows;
+            let newCooldown = 0;
+            let PlayableCard = true;
+
             if (!attInGame){
                 return { status: 404, result: {msg: "There's no player with that ID"}}
             } else {
-                let sqlU = "UPDATE attackInGame SET att_IG_cooldown = $1 WHERE att_IG_action_id = $2;";
-                console.log(cooldown);
-                console.log(action);
+                console.log("Testing the Att_action_cooldown: " + attInGame[0].att_action_cooldown);
+                for (let i of attInGame)
+                {
+                    let cooldown = i.att_ig_cooldown;
+                    let baseCooldown = i.att_action_cooldown;
+                    console.log("Testing the cooldown: " + cooldown)
+                    console.log("Testing the base cooldown: " + baseCooldown)
+                    if ( cooldown >= baseCooldown)
+                    {
+                        console.log("Papopé");
+                        newCooldown = cooldown;
+                        PlayableCard = true;
+                    } else {
+                        console.log("Pipipapopé");
+                        newCooldown = 0;
+                        console.log(cooldown)
+                        newCooldown = cooldown + 1;
+                        console.log(newCooldown)
+                        PlayableCard = false;
+                    }
+                    
+                }
+                let sqlU = "UPDATE attackInGame SET att_IG_cooldown = $3 WHERE att_IG_action_id = $2 and att_ig_player_id = $1;";
+                //console.log("Fui Chamado no actions model");
 
-                let resultU = await pool.query(sqlU, [cooldown, action]);
+                console.log("No work?" + newCooldown)
+                let resultU = await pool.query(sqlU, [id, action, newCooldown]);
                 if (resultU == undefined)
                 {
                     return {
@@ -177,6 +195,7 @@ module.exports.postUpdateCooldownByPlayer = async function(id, action, cooldown)
                         result: {msg: "The update failed"}
                     };
                 }
+
                 return {
                     status: 200,
                     result: attInGame
