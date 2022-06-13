@@ -62,8 +62,10 @@ function draw()
     }
     if(pendingMatch){
         if(roomIdStatus.rowCount > 0)
-            if(cookies.roomId != null)
+            if(cookies != null){
+                if(cookies.roomId != null)
                 window.location.href = "game.html";
+            }
     }
 }
 
@@ -83,12 +85,15 @@ class LoginClass{
     }
 }
 setInterval(async function(){
+    if(cookies != null) console.log(cookies.userId);
     if(pendingMatch){
         await Tinder.getARoom();
         console.log(roomIdStatus.rowCount);
         
         console.log("Cookie monster aproching");
+        if(cookies == null)
         cookies = await ChipsAhoy.getMeCookies();
+        
         
     }
 },1000);
