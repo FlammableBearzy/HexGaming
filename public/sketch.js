@@ -44,7 +44,7 @@ let currentTurn;
 let tester = false;
 let parcela = null;
 
-let cookies;
+let cookies = null;
 
 function preload() {
   Attacks.preloadAction();

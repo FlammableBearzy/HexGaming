@@ -61,7 +61,7 @@ function draw()
         canDrawMatchMaking = false;
     }
     if(pendingMatch){
-        if(cookies != null)
+        if(roomIdStatus.rowCount > 0)
             if(cookies.roomId != null)
                 window.location.href = "game.html";
     }
@@ -86,10 +86,10 @@ setInterval(async function(){
     if(pendingMatch){
         await Tinder.getARoom();
         console.log(roomIdStatus.rowCount);
-        if(cookies == null && roomIdStatus.rowCount > 0){
-            console.log("Cookie monster aproching");
-            cookies = await ChipsAhoy.getMeCookies();
-        }
+        
+        console.log("Cookie monster aproching");
+        cookies = await ChipsAhoy.getMeCookies();
+        
     }
 },1000);
 
