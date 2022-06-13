@@ -265,7 +265,7 @@ module.exports.postTrapPlacing = async function(id, room, attack, parcel) {
             console.log(room);
             console.log(attack);
             console.log(parcel);
-            let trap = result.rows;
+            let trap = result.rows; //This is empty, might need to wait for it
             if (result == undefined)
             {
                 return {
@@ -284,7 +284,7 @@ module.exports.postTrapPlacing = async function(id, room, attack, parcel) {
             return {
                 status: 200,
                 result: {
-                    msg: "You posted!"
+                    msg: "You posted!", id, room, attack, parcel
                 }
             };
     } catch (err) {
@@ -292,14 +292,82 @@ module.exports.postTrapPlacing = async function(id, room, attack, parcel) {
         return {status: 500, result: err}
     }
 }
+
+module.exports.postTrapRemoving = async function(id, room, attack, parcel){
+    try{
+        if(!parseInt(room))
+        {
+            console.log("This Room: " + room);
+            if(!parseInt(attack))
+            {
+                
+                console.log("This Attack:" + attack);       
+                if(!parseInt(parcel))
+                {
+                    console.log("This Parcel: " + parcel);
+                    return{ 
+                        status: 400,
+                        result: { msg: "This parcel " + parcel}
+                    };
+                }
+
+                return{ 
+                    status: 400,
+                    result: { msg: "This attack " + attack}
+                };
+            }
+
+            return {
+                status: 400,
+                result: {msg: "This Room: " + room + " with the player with id: " + id}
+            };
+        }
+
+        let sqls = `select * from traps where trap_player_id = $1;`;
+        let result = await pool.query(sqls, [id]);
+        let trapPlaced = result.rows;
+        if (!trapPlaced){
+            return { status: 404, result: {msg: "There's no player with that ID"}}
+        } else {
+            let sqlU = "Delete from traps where trap_room_id = $2 and trap_player_id = $1 and trap_parsel_id = $4 and trap_attack_id = $3";
+
+            console.log(id);
+            console.log(room);
+            console.log(attack);
+            console.log(parcel);
+
+            let resultU = await pool.query(sqlU, [id, room, attack, parcel]);
+            if (resultU == undefined)
+            {
+                return {
+                    status: 404,
+                    result: {msg: "something is missing"}
+                };
+            }
+            
+            if (resultU.rowCount == 0)
+            {
+                return {
+                    status: 500,
+                    result: {msg: "The update failed"}
+                };
+            }
+            return {
+                status: 200,
+                result: {
+                    msg: "You posted!", trapPlaced
+                }
+            };
+        }
+    } catch (err){
+    console.log(err);
+    return { status: 500, result: err};
+    }
+}
+
 /*
-Make the Update cards get starter information from all cards. This will require a new route with the player id as base.
+Delete card from Trap after being activated
 
-Something like "/api/actions/${id}/ResetCooldowns".
+postTrapRemover
 
-This will be called once, every time the player plays a new game to reset their cards.
-
-it will work as a post.
-Will use the information from the GetAllAttackActions
-after getting that info, update with the values from the base cards ( from the Attack Actions)
 */

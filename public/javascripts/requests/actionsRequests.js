@@ -141,3 +141,25 @@ async function postTrapPlacing(playerId, roomId, attackId, parcelId)
         console.log(err);
     }
 }
+
+async function postTrapRemoving(playerId, roomId, attackId, parcelId)
+{
+    try {
+        const response = await fetch(`/api/actions/${playerId}/RemoveTraps`,
+        {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({ roomID: roomId, attackID: attackId, parcelID: parcelId })
+        });
+
+        if (response.status == 200)
+        {
+            var action = await response.json();
+            return action;
+        } else {
+            console.log(response);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
