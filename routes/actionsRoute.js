@@ -61,7 +61,7 @@ router.post('/:id/PlaceTraps', async function(req, res, next)
     res.status(result.status).send(result.result)
 })
 
-router.post('/id/RemoveTraps'), async function(req, res, next)
+router.post('/id/RemoveTraps', async function(req, res, next)
 {
     let id = req.params.id;
     let roomID = req.body.roomID;
@@ -70,5 +70,5 @@ router.post('/id/RemoveTraps'), async function(req, res, next)
     console.log(`The player ${id} in the game ${roomID} is placing the trap ${attackID} on the parsel ${parcelID}`);
     let result = await aModel.postTrapRemoving(id, roomID, attackID, parcelID);
     res.status(result.status).send(result.result)
-}
+});
 module.exports = router;
