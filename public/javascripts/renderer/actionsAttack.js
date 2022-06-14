@@ -99,7 +99,6 @@ class Attacks {
         }
         console.log("iniCard");
         return iniCard;
-
     }
 
 
@@ -111,4 +110,14 @@ class Attacks {
             Attacks.UpdateActionsPerRound(2, 1, 5)
         }    
     };
+
+    static async PlaceTrapOnFloor(id, room, action, parcel)
+    {
+        let trapPlaced = await postTrapPlacing(id, room, action, parcel);
+        if (trapPlaced != undefined)
+        {
+            console.log("Inside first if of 'Place Trap'");
+            
+        }
+    }
 }
