@@ -1,4 +1,5 @@
-var pool = require('./connection.js')
+var pool = require('./connection.js');
+const { turnChanger } = require('./roomsModel.js');
 
 module.exports.getAllMoveActions = async function() {
     try {
@@ -61,6 +62,7 @@ module.exports.play = async function (id, direction) {
                 result : {msg : "The updated failed"}
             };
         }
+        console.log(turnChanger());
         return {
             status: 200,
             result: {

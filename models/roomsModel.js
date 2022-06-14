@@ -224,6 +224,76 @@ class Queue2
         return this.count == 0;
     }
 }
+function turnChanger()
+{
+    try{
+        console.log(id);
+        if (!parseInt(id)){
+
+            return { status: 400, result: { msg: "Room id must be a number" } };           
+        }
+
+        //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
+        //let result = await pool.query(sql, [id, player, parsel]);
+        
+        console.log(id);
+        let sqlr = `Select * from room where room_id = $1;`; // removed a room.room_game_id, and placed room_game_id;
+        let resultr = await pool.query(sqlr,[id]);
+        let room = resultr.rows[0].room_id;
+        let currentTurn = resultr.rows[0].room_turns;
+        console.log(room);
+        if (!room && !currentTurn)
+        {
+            return { status: 404, result: { msg: "No room: "+ room + "; currentTurn: " + currentTurn}};
+        } else {
+            
+            let newTurn = currentTurn + 1;
+            let newPlayer = resultr.rows[0].room_lastturnplayer_id;
+            if(newTurn %2 == 0){
+                if(newPlayer == resultr.rows[0].room_player1_id){
+                    newPlayer = resultr.rows[0].room_player2_id
+                }
+                else
+                {
+                    newPlayer = resultr.rows[0].room_player1_id
+                }
+            }
+            let sqlU = "UPDATE room SET room_turns = $2, room_lastturnplayer_id = $3 WHERE room_id = $1;";
+            let resultU = await pool.query(sqlU, [room, newTurn, newPlayer]);
+            console.log(resultU);
+       if(resultU == undefined)
+        {
+            return {
+                status : 404,
+                result : {msg : "Something is missing"}
+            };
+        }
+
+        if (resultU.rowCount == 0)
+        {
+            return {
+
+                status : 500,
+                result : {msg : "The updated failed"}
+            };
+        }
+        let sql2 = `Select * from room where room_id = $1;`; // removed a room.room_game_id, and placed room_game_id;
+        let result2 = await pool.query(sql2,[id]);
+        return {
+            status: 200,
+            result: {result: result2}
+          };
+            //return { status: 200, result: { msg: "You've entered the room" } };    
+        }
+    
+
+        
+        //let resultU = await pool.query(sqlU, [player, parsel],(arg) => promise(arg));
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
 /*setInterval(async function(){
     try{
         if(queue == null) queue = new Queue2();
