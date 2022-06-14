@@ -28,6 +28,8 @@ function setup(){
     
     loginButton.buttonBuilder();
     registButton.buttonBuilder();
+    
+    console.log(Date.now().toString());
 }
 function draw()
 {

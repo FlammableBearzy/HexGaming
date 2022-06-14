@@ -40,7 +40,7 @@ module.exports.getAllRooms = async function(){
 
 module.exports.turnChanger = async function (id) {
     try{
-        console.log(id);
+        
         if (!parseInt(id)){
 
             return { status: 400, result: { msg: "Room id must be a number" } };           
@@ -49,12 +49,12 @@ module.exports.turnChanger = async function (id) {
         //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
         //let result = await pool.query(sql, [id, player, parsel]);
         
-        console.log(id);
+        
         let sqlr = `Select * from room where room_id = $1;`; // removed a room.room_game_id, and placed room_game_id;
         let resultr = await pool.query(sqlr,[id]);
         let room = resultr.rows[0].room_id;
         let currentTurn = resultr.rows[0].room_turns;
-        console.log(room);
+        
         if (!room && !currentTurn)
         {
             return { status: 404, result: { msg: "No room: "+ room + "; currentTurn: " + currentTurn}};
@@ -73,7 +73,7 @@ module.exports.turnChanger = async function (id) {
             }
             let sqlU = "UPDATE room SET room_turns = $2, room_lastturnplayer_id = $3 WHERE room_id = $1;";
             let resultU = await pool.query(sqlU, [room, newTurn, newPlayer]);
-            console.log(resultU);
+            
        if(resultU == undefined)
         {
             return {
@@ -123,7 +123,7 @@ module.exports.queueJoiner = async function (id) {
         if(canQueue)
         {
             queue.enqueue(id);
-            console.log(queue.list);
+            
             return { status: 200, msg: "Enqueued" }
         }
         else
@@ -142,13 +142,13 @@ module.exports.queueJoiner = async function (id) {
 module.exports.matchMaking = async function () {
     try{
         if(queue == null) queue = new Queue2();
-        console.log("Matching");
+        
         let id1;
         let id2;
         if(queue.count >= 2){
             id1 = queue.dequeue();
             id2 = queue.dequeue();
-            console.log("Enquing:" + id1 + " and " + id2);
+            
             let sql = "INSERT INTO room (room_state, room_player1_id, room_player2_id, room_turns, room_lastturnplayer_id) Values ('Playing', $1, $2, 0, $1)"
             await pool.query(sql, [id1, id2]);
             return {status: 200, msg: "Joined a room!"}
@@ -165,7 +165,7 @@ module.exports.matchMaking = async function () {
 
 module.exports.getTurns = async function (id) {
     try{
-        console.log("Room id:" + id);
+        
         let sql = "Select room_turns, room_lastturnplayer_id from room where room_id = $1"
         let result2 = await pool.query(sql,[id])
         
@@ -179,7 +179,7 @@ module.exports.getTurns = async function (id) {
 
 module.exports.getRoomById = async function (id) {
     try{
-        console.log("Player id:" + id);
+        
         let sql = "Select room_id from room where room_player1_id = $1 OR room_player2_id = $1"
         let result2 = await pool.query(sql,[id])
         return{status:200, result: result2}
@@ -207,12 +207,11 @@ class Queue2
     dequeue(){
         if(!this.isEmpty())
         {
-            console.log("Head: " + this.head + "Value: " + this.list[this.head])
+            
             let item = this.list[this.head];
             this.list[this.head] = null;
             this.head++;
             this.count--;
-            console.log(item);
             return item;
         }
         else
@@ -224,7 +223,24 @@ class Queue2
         return this.count == 0;
     }
 }
-
+setInterval(async function(){
+    let currentTime = Date.now();
+    console.log(Date.now());
+    let sql = `SELECT * from room`;
+    let result = await pool.query(sql);
+    for(i = 0; i < result.rowCount; i++ )
+    {
+        if(result.rows[i].lastactivity != null){
+            console.log(currentTime - parseInt(result.rows[i].lastactivity))
+            
+            if(currentTime - parseInt(result.rows[i].lastactivity) > 30000){
+                
+                let sql2 = `Delete from room where room_id = $1`;
+                let result2 = await pool.query(sql2, [result.rows[i].room_id]);
+            }
+        }
+    }
+}, 3000)
 /*setInterval(async function(){
     try{
         if(queue == null) queue = new Queue2();
