@@ -22,8 +22,6 @@ class button{
     }
     clicker(mouseX, mouseY, is_Clicked){
         if((mouseX > this.x && mouseX < this.x + this.w) && (mouseY > this.y && mouseY < this.y + this.h) && is_Clicked){
-            if(this.actionButton)
-            //TurnManager.nextTurn();
             return true;
         } else
         {

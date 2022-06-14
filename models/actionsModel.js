@@ -62,7 +62,9 @@ module.exports.play = async function (id, direction) {
                 result : {msg : "The updated failed"}
             };
         }
-        console.log(Turns.turnChanger(id));
+        console.log("Entering turn changer");
+        Turns.turnChanger(id);
+
         return {
             status: 200,
             result: {
@@ -388,10 +390,10 @@ module.exports.postTrapRemoving = async function(id, room, attack, parcel){
 
 class Turns
 {
-async turnChanger(id)
+   static async turnChanger(id)
 {
     try{
-        console.log(id);
+        console.log("Turn changer id: " + id);
         if (!parseInt(id)){
 
             return { status: 400, result: { msg: "Room id must be a number" } };           
@@ -423,10 +425,11 @@ async turnChanger(id)
                 }
             }
             let sqlU = "UPDATE room SET room_turns = $2, room_lastturnplayer_id = $3 WHERE room_player1_id = $1 OR room_player2_id = $1;";
-            let resultU = await pool.query(sqlU, [room, newTurn, newPlayer]);
+            let resultU = await pool.query(sqlU, [id, newTurn, newPlayer]);
             console.log(resultU);
        if(resultU == undefined)
         {
+            console.log("Error 404");
             return {
                 status : 404,
                 result : {msg : "Something is missing"}
@@ -435,6 +438,7 @@ async turnChanger(id)
 
         if (resultU.rowCount == 0)
         {
+            console.log("Error 500");
             return {
 
                 status : 500,
@@ -443,6 +447,7 @@ async turnChanger(id)
         }
         let sql2 = `Select * from room where room_player1_id = $1 OR room_player2_id = $1;`; // removed a room.room_game_id, and placed room_game_id;
         let result2 = await pool.query(sql2,[id]);
+        console.log("Code 200");
         return {
             status: 200,
             result: {result: result2}
