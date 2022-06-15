@@ -63,7 +63,7 @@ function setup() {
 
   player[1] =new playerCreator(newBoard[1], 150, "Blue",1);
   player[2] = new playerCreator(newBoard[18], 150, "Red", 2);
-  attack[1] = new attackCreator(newBoard[5], 150, "Pink", 1)
+  attack[1] = new attackCreator(newBoard[5], 150, "Pink", 1);
   turnsClass = new turn(1200,50, 200, player);
   //Movement.StartGame(0, newBoard);
 
@@ -120,6 +120,9 @@ function draw() {
   {
     playerRoomId = cookies.userId;
   }
+
+  attack[1].attackplacer(newBoard[5]);
+
   if(player1Pos != null)
   player[1].playerPlacer(newBoard[player1Pos]);
   if(player2Pos != null)
