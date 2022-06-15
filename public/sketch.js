@@ -38,11 +38,14 @@ let canClick = true;
 //turn
 let turnsClass;
 let canPlay;
-let currentTurn;
+let currentTurn = null;
 
 
 let tester = false;
 let parcela = null;
+
+//Room
+let room = null;
 
 let cookies = null;
 
@@ -63,8 +66,9 @@ function setup() {
 
   player[1] =new playerCreator(newBoard[1], 150, "Blue",1);
   player[2] = new playerCreator(newBoard[18], 150, "Red", 2);
-  attack[1] = new attackCreator(newBoard[5], 150, "Pink", 1)
-  turnsClass = new turn(1200,50, 200, player);
+  //attack[1] = new attackCreator(newBoard[5], 150, "Green", 1)
+
+  //turnsClass = new turn(1200,50, 200, player);
   //Movement.StartGame(0, newBoard);
 
   console.log("Before Starting");
@@ -73,7 +77,7 @@ function setup() {
 
   movementClass = new Movement();
   
-
+  
   upArrow = new button("Up", 100,100,100,50,player);
   downArrow = new button("Down", 200,100,100,50,player);
   leftArrow = new button("Left", 300,100,100,50,player);
@@ -95,7 +99,10 @@ function setup() {
  
   let promise = ChipsAhoy.getMeCookies();
   promise.then(value => cookies = value);
-  TurnManager.getTurns();
+  //TurnManager.getTurns();
+ 
+
+  room = RoomManager.getRoom();
 }
 
 function draw() {
@@ -116,22 +123,18 @@ function draw() {
     card2.drawBase();
     card3.drawBase();
 
-  if(cookies != null)
-  {
-    playerRoomId = cookies.userId;
-  }
+  
   if(player1Pos != null)
   player[1].playerPlacer(newBoard[player1Pos]);
   if(player2Pos != null)
   player[2].playerPlacer(newBoard[player2Pos]);
-  
 }
 
 
 
 
 function Builder(){
-  turnsClass.builder();
+  //turnsClass.builder();
 
   newBoard = boardClass.createBoard(boardWidth,boardHeight,200);
   for (let i = 0; i < traps.length;i++){
@@ -156,25 +159,51 @@ function mouseClicked()
 
 function timerRefreshPage(){
   let currentPos = null;
-  let posArray;
   setInterval(function () {
-    TurnManager.getTurns();
+      room = RoomManager.getRoom();
       let promiseResult;
       currentPos = Movement.GetPlayerPositions();
       if(currentPos != undefined){
         
         currentPos.then(value => {
-          player1Pos = value.rows[0].mov_action_parselid;
-          player2Pos = value.rows[1].mov_action_parselid;
+          if(room != null){
+            if(playerRoomId != null){
+
+              if(value.rows[0].mov_player_id == cookies.userId)
+              {
+                if(playerRoomId == 1){
+                  player1Pos = value.rows[0].mov_action_parselid;
+                  player2Pos = value.rows[1].mov_action_parselid;
+                }
+                else
+                {
+                  player1Pos = value.rows[1].mov_action_parselid;
+                  player2Pos = value.rows[0].mov_action_parselid;
+                }
+              }
+
+              if(value.rows[1].mov_player_id == cookies.userId)
+              {
+                if(playerRoomId == 1){
+                  player1Pos = value.rows[1].mov_action_parselid;
+                  player2Pos = value.rows[0].mov_action_parselid;
+                }
+                else
+                {
+                  player1Pos = value.rows[0].mov_action_parselid;
+                  player2Pos = value.rows[1].mov_action_parselid;
+                }
+            }
+          }
+          
+          }
         });
-      
-        
       }
-      console.log(cookies);
+      //console.log(cookies);
   }, 1000);
   
 }
-class TurnManager
+/*class TurnManager
 {
   static async getTurns()
   {
@@ -186,12 +215,27 @@ class TurnManager
   {
       await turnChanger(cookie);
   }
+}*/
+function PlayerIdentifier(room)
+{
+    if(cookies != null)
+    {
+      if(cookies.userId == room.rows[0].room_player1_id)
+        playerRoomId = 1;
+        else
+        playerRoomId = 2;
+    }
 }
 
+class RoomManager{
+
+  static async getRoom()
+  {
+    console.log("Running");
+    let room = await getRoom();
+    PlayerIdentifier(room);
+    console.log("Running2");
+    currentTurn = room.rows[0].room_turns;
+  }  
   
-
-
-
-
-
-
+}

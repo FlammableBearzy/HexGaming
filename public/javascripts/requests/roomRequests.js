@@ -1,9 +1,8 @@
 
 
-async function getRoom(gameId) {
+async function getRoom() {
     try {
-        const response = await fetch(`/api/rooms/${gameId}`);
-        console.log("There was an input with mouse");
+        const response = await fetch(`/api/rooms/getRoom`);
         if (response.status == 200)
         {
             var room = await response.json();
