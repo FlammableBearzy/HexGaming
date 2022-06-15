@@ -13,12 +13,12 @@ class attackCreator{
         {
             this.parcel = newParcel;
             fill(this.color)
-            square(this.parcel.centerx, this.parcel.centery, this.size)
+            circle(this.parcel.centerx, this.parcel.centery, this.size)
         }
         else
         {
             fill(this.color)
-            square(this.parcel.centerx, this.parcel.centery, this.size)
+            circle(this.parcel.centerx, this.parcel.centery, this.size)
         }
     }
 }
