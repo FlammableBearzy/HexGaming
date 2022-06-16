@@ -1,3 +1,5 @@
+
+
 //Canvas relatable
 const width = 1000;
 const height = 600;
@@ -31,6 +33,7 @@ let attack = [];
 let card1;
 let card2;
 let card3;
+let damageParcels = [];
 
 
 let canClick = true;
@@ -39,6 +42,7 @@ let canClick = true;
 let turnsClass;
 let canPlay;
 let currentTurn = null;
+let turnsText;
 
 
 let tester = false;
@@ -46,8 +50,10 @@ let parcela = null;
 
 //Room
 let room = null;
-
+let roominfo = null;
 let cookies = null;
+let whoIsPlaying = null; 
+
 
 function preload() {
   Attacks.preloadAction();
@@ -66,7 +72,7 @@ function setup() {
 
   player[1] =new playerCreator(newBoard[1], 150, "Blue",1);
   player[2] = new playerCreator(newBoard[18], 150, "Red", 2);
-  //attack[1] = new attackCreator(newBoard[5], 150, "Green", 1)
+  attack[1] = new attackCreator(newBoard[3], 150, "Green", 1)
 
   //turnsClass = new turn(1200,50, 200, player);
   //Movement.StartGame(0, newBoard);
@@ -88,11 +94,8 @@ function setup() {
   movementButtonArray.push(rightArrow);
 
   
+  
 
-  traps.push(new boardTrap(newBoard[7],1,1))
-  traps.push(new boardTrap(newBoard[8],1,1))
-  traps.push(new boardTrap(newBoard[15],1,1))
-  traps.push(new boardTrap(newBoard[12],1,1))
 
   timerRefreshPage();
 
@@ -103,6 +106,9 @@ function setup() {
  
 
   room = RoomManager.getRoom();
+  attack[1].HorizontalAttack(newBoard);
+  
+
 }
 
 function draw() {
@@ -134,7 +140,13 @@ function draw() {
 
 
 function Builder(){
-  //turnsClass.builder();
+  if(roominfo != null){
+  
+  fill("Black");
+  textSize(30);
+  turnsText = text("Number of actions done: " + roominfo.rows[0].room_turns + "\nCurrently playing: " + whoIsPlaying,windowWidth/2,100);
+  }
+  textSize(20);
 
   newBoard = boardClass.createBoard(boardWidth,boardHeight,200);
   for (let i = 0; i < traps.length;i++){
@@ -142,7 +154,7 @@ function Builder(){
   }
   
   
-
+  textSize(20);
   upArrow.buttonBuilder()
   downArrow.buttonBuilder()
   rightArrow.buttonBuilder()
@@ -159,7 +171,10 @@ function mouseClicked()
 
 function timerRefreshPage(){
   let currentPos = null;
-  setInterval(function () {
+  setInterval( function () {
+      AttackDisplayer();
+
+      
       room = RoomManager.getRoom();
       let promiseResult;
       currentPos = Movement.GetPlayerPositions();
@@ -231,10 +246,18 @@ class RoomManager{
 
   static async getRoom()
   {
-    console.log("Running");
+    
     let room = await getRoom();
     PlayerIdentifier(room);
-    console.log("Running2");
+    roominfo = room;
+    if(cookies != null){
+      if(room.rows[0].room_lastturnplayer_id == cookies.userId)
+      {
+        whoIsPlaying = "You!";
+      }
+      else whoIsPlaying = "Other Player";
+    }
+    
     currentTurn = room.rows[0].room_turns;
   }  
   
