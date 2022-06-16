@@ -156,7 +156,13 @@ module.exports.matchMaking = async function () {
             return {status: 400, msg: "Already in room"}
             
             let sql = "INSERT INTO room (room_state, room_player1_id, room_player2_id, room_turns, room_lastturnplayer_id, lastactivity) Values ('Playing', $1, $2, 0, $1, $3)"
-            await pool.query(sql, [id1, id2, Date.now() *2 ]);
+            await pool.query(sql, [id1, id2, Date.now()]);
+
+            let sql3 = `Update moveAction SET mov_action_parselid = 1 where mov_player_id = $1`
+            await pool.query(sql3,[id1]);
+            let sql4 = `Update moveAction SET mov_action_parselid = 18 where mov_player_id = $1`
+            await pool.query(sql4,[id2]);
+
             return {status: 200, msg: "Joined a room!"}
         }
         else

@@ -512,7 +512,7 @@ class Turns
                 }
             }
             let sqlU = "UPDATE room SET room_turns = $2, room_lastturnplayer_id = $3, lastactivity = $4 WHERE room_player1_id = $1 OR room_player2_id = $1;";
-            let resultU = await pool.query(sqlU, [id, newTurn, newPlayer, (Date.now()*2).toString()]);
+            let resultU = await pool.query(sqlU, [id, newTurn, newPlayer, (Date.now()).toString()]);
             console.log(resultU);
        if(resultU == undefined)
         {
