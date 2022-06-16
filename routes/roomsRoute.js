@@ -15,7 +15,11 @@ router.get('/', async function(req, res, next){
     let result = await rModel.getGameByID(id);
     res.status(result.status).send(result.result);
 });*/
+router.get('/getRoom', async function(req,res,next){
+    let result = await rModel.getRoomById(req.signedCookies.userId);
+    res.status(result.status).send(result.result);
 
+});
 
 router.post('/turnChanger', async function(req,res, next){
     console.log("I'm in turn changer!");

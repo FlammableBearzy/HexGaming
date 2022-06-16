@@ -24,4 +24,33 @@ class attackCreator{
             circle(this.parcel.centerx, this.parcel.centery, this.size)
         }
     }
+
+    HorizontalAttack(board)
+    {
+        let row = RowCalculator(this.parcel.parcelId);
+        for(let i = 1; i < board.length; i++)
+        {
+            if(RowCalculator(board[i].parcelId) == row)
+            damageParcels.push(board[i]);
+        }
+        
+    }
+    
+}
+function AttackDisplayer()
+{
+    if(traps.length == 0)
+      {
+        
+        for(let i = 0; i < damageParcels.length; i++){
+          console.log("Traps");
+          traps.push(new boardTrap(damageParcels[i],1,1));
+        }
+        
+      }
+      else
+      {
+        traps = [];
+        damageParcels = [];
+      }
 }

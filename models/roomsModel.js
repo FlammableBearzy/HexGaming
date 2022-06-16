@@ -145,12 +145,18 @@ module.exports.matchMaking = async function () {
         
         let id1;
         let id2;
+        
         if(queue.count >= 2){
             id1 = queue.dequeue();
             id2 = queue.dequeue();
+
+            let sql2 = 'Select * From room where room_player1_id = $1 OR room_player1_id = $2 OR room_player2_id = $1 OR room_player2_id = $2';
+            let result2 = await pool.query(sql2,[id1, id2]);
+            if(result2.rowCount > 0)
+            return {status: 400, msg: "Already in room"}
             
-            let sql = "INSERT INTO room (room_state, room_player1_id, room_player2_id, room_turns, room_lastturnplayer_id) Values ('Playing', $1, $2, 0, $1)"
-            await pool.query(sql, [id1, id2]);
+            let sql = "INSERT INTO room (room_state, room_player1_id, room_player2_id, room_turns, room_lastturnplayer_id, lastactivity) Values ('Playing', $1, $2, 0, $1, $3)"
+            await pool.query(sql, [id1, id2, Date.now() *2 ]);
             return {status: 200, msg: "Joined a room!"}
         }
         else
@@ -177,10 +183,11 @@ module.exports.getTurns = async function (id) {
     }
 }
 
+
 module.exports.getRoomById = async function (id) {
     try{
         
-        let sql = "Select room_id from room where room_player1_id = $1 OR room_player2_id = $1"
+        let sql = "Select * from room where room_player1_id = $1 OR room_player2_id = $1"
         let result2 = await pool.query(sql,[id])
         return{status:200, result: result2}
         
@@ -225,7 +232,6 @@ class Queue2
 }
 setInterval(async function(){
     let currentTime = Date.now();
-    console.log(Date.now());
     let sql = `SELECT * from room`;
     let result = await pool.query(sql);
     for(i = 0; i < result.rowCount; i++ )

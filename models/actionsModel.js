@@ -387,7 +387,57 @@ module.exports.postTrapRemoving = async function(id, room, attack, parcel){
     return { status: 500, result: err};
     }
 }
+async function HorizontalAttack(playerId, trapParcel)
+{
+    try{
 
+        //let sql = `Select * from room, moveAction where room.room_game_id = $1 and moveAction.mov_player_id = $2 and mov_action_parselId = $3;`;
+        //let result = await pool.query(sql, [id, player, parsel]);
+        let target = null
+        console.log(id);
+        let sqlr = `Select * from room where room_player1_id = $1 OR room_player2_id = $1;`; // removed a room.room_game_id, and placed room_game_id;
+        let resultr = await pool.query(sqlr,[playerId]);
+        if(resultr.rows[0].room_player1_id == playerId) target = resultr.rows[0].room_player2_id;
+        else target = resultr.rows[0].room_player1_id;
+        let sql2 = `Select mov_action_parselid from moveAction where mov_player_id = $1`;
+        let result2 = pool.query(sql2,[target]);
+        if(RowCalculator(trapParcel) == RowCalculator(result2))
+        {
+            return //Loose Health Event
+        }
+        else
+        {
+            return {
+                status: 200,
+                result: {msg:"No player was hit"}
+              };
+
+        }
+
+        
+        
+            //return { status: 200, result: { msg: "You've entered the room" } };    
+        
+    
+
+        
+        //let resultU = await pool.query(sqlU, [player, parsel],(arg) => promise(arg));
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
+function RowCalculator(parcelId)
+{
+  let boardLenght = 6;
+  let currentRow = null;
+  if(parcelId%boardLenght  != 0)
+  {
+    currentRow = ((parcelId - parcelId % boardLenght )/boardLenght ) + 1;
+  }
+  else currentRow = parcelId / boardLenght ;
+  return currentRow;
+}
 class Turns
 {
    static async turnChanger(id)
@@ -425,7 +475,7 @@ class Turns
                 }
             }
             let sqlU = "UPDATE room SET room_turns = $2, room_lastturnplayer_id = $3, lastactivity = $4 WHERE room_player1_id = $1 OR room_player2_id = $1;";
-            let resultU = await pool.query(sqlU, [id, newTurn, newPlayer, Date.now().toString()]);
+            let resultU = await pool.query(sqlU, [id, newTurn, newPlayer, (Date.now()*2).toString()]);
             console.log(resultU);
        if(resultU == undefined)
         {

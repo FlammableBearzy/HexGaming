@@ -47,3 +47,14 @@ class boardTrap{
       
     }
 }
+function RowCalculator(parcelId)
+{
+  let boardLenght = 6;
+  let currentRow = null;
+  if(parcelId%boardLenght  != 0)
+  {
+    currentRow = ((parcelId - parcelId % boardLenght )/boardLenght ) + 1;
+  }
+  else currentRow = parcelId / boardLenght ;
+  return currentRow;
+}
