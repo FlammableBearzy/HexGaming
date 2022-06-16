@@ -254,6 +254,7 @@ module.exports.postResetActions = async function(id){
 
 module.exports.postTrapPlacing = async function(id, room, attack, parcel) {
     try {
+        
         if(!parseInt(room))
         {
             console.log("This Room: " + room);
@@ -280,39 +281,36 @@ module.exports.postTrapPlacing = async function(id, room, attack, parcel) {
                 status: 400,
                 result: {msg: "This Room: " + room + " with the player with id: " + id}
             };
+        } console.log("--- Error Spot 1 ---");
+        let sql = `select * from attackInGame where att_ig_player_id = $1`;
+        let result = await pool.query(sql, [id]);
+        if (result.rowCount > 0){
+            let sql2 = `Select room_lastturnplayer_id from room where room_player1_id = $1 OR room_player2_id = $1`
+            let result2 = await pool.query(sql2, [id]);
+            if(id == result2.rows[0].room_lastturnplayer_id )
+            {
+                let sqlIn = `insert into traps (trap_player_id, trap_room_id, trap_attack_id, trap_parsel_id, trap_activation) values ($1, $2, $3, $4, 0)`;
+                let result = await pool.query(sqlIn, [id, room, attack, parcel]);
+                console.log(id);
+                console.log(room);
+                console.log(attack);
+                console.log(parcel);
+                let trap = result.rows; //This is empty, might need to wait for it
+                
+                return {
+                    status: 200,
+                    result: {
+                        msg: "You posted!", id, room, attack, parcel
+                    }
+                };
+    
+            } else return {status: 400, msg:"Not your turn"}    
+        } else {
+            return { status: 404, result: {msg: "There's no player with that ID"}}
         }
-
-        let sqlIn = `insert into traps (trap_player_id, trap_room_id, trap_attack_id, trap_parsel_id, trap_activation) values ($1, $2, $3, $4, 0)`;
-            let result = await pool.query(sqlIn, [id, room, attack, parcel]);
-            console.log(id);
-            console.log(room);
-            console.log(attack);
-            console.log(parcel);
-            let trap = result.rows; //This is empty, might need to wait for it
-            if (result == undefined)
-            {
-                return {
-                    status: 404,
-                    result: {msg: "something is missing"}
-                };
-            }
-            
-            if (result.rowCount == 0)
-            {
-                return {
-                    status: 500,
-                    result: {msg: "The update failed"}
-                };
-            }
-            return {
-                status: 200,
-                result: {
-                    msg: "You posted!", id, room, attack, parcel
-                }
-            };
     } catch (err) {
         console.log(err);
-        return {status: 500, result: err}
+        return {status: 420, result: err}
     }
 }
 
@@ -349,6 +347,7 @@ module.exports.postTrapRemoving = async function(id, room, attack, parcel){
         let sqls = `select * from traps where trap_player_id = $1;`;
         let result = await pool.query(sqls, [id]);
         let trapPlaced = result.rows;
+        
         if (!trapPlaced){
             return { status: 404, result: {msg: "There's no player with that ID"}}
         } else {
@@ -403,7 +402,8 @@ async function HorizontalAttack(playerId, trapParcel)
         let result2 = pool.query(sql2,[target]);
         if(RowCalculator(trapParcel) == RowCalculator(result2))
         {
-            return //Loose Health Event
+            return;
+            //Damage(target);
         }
         else
         {
@@ -411,7 +411,6 @@ async function HorizontalAttack(playerId, trapParcel)
                 status: 200,
                 result: {msg:"No player was hit"}
               };
-
         }
 
         
@@ -437,6 +436,44 @@ function RowCalculator(parcelId)
   }
   else currentRow = parcelId / boardLenght ;
   return currentRow;
+}
+async function VerticalAttack(playerId, trapParcel)
+{
+    try{
+        let target = null
+        console.log(id);
+        let sqlr = `Select * from room where room_player1_id = $1 OR room_player2_id = $1;`; // removed a room.room_game_id, and placed room_game_id;
+        let resultr = await pool.query(sqlr,[playerId]);
+        if(resultr.rows[0].room_player1_id == playerId) target = resultr.rows[0].room_player2_id;
+        else target = resultr.rows[0].room_player1_id;
+        let sql2 = `Select mov_action_parselid from moveAction where mov_player_id = $1`;
+        let result2 = pool.query(sql2,[target]);
+        if(CollumCalculator(trapParcel) == CollumCalculator(result2))
+        {
+            Damage(target); //Loose Health Event
+        }
+        else
+        {
+            return {
+                status: 200,
+                result: {msg:"No player was hit"}
+            };
+        }
+
+    } catch (err) {
+        console.log(err);
+        return { status: 420, result: err };
+    }
+}
+function CollumCalculator(parcelID)
+{
+    let boardLenght = 6;
+    let boardHeight = 3;
+    let currentCollum = null;
+    
+    currentCollum = (((parcelID % boardLenght) / boardHeight));
+    
+    return currentCollum;
 }
 class Turns
 {
@@ -513,6 +550,46 @@ class Turns
         return { status: 420, result: err };
     }
 }
+
+}
+
+async function Damage(id){
+    try{
+        let sqls = `select * from player where player_id = $1;`;
+        let result = await pool.query(sqls, [id]);
+        let HpDamage = result.rows;
+        if (!HpDamage){
+            return { status: 404, result: {msg: "There's no player with that ID"}}
+        } else {
+            let sqlU = "Update player set player_health = player_health - 1 where player_id = $1;";
+
+            let resultU = await pool.query(sqlU, [id]);
+            if (resultU == undefined)
+            {
+                return {
+                    status: 404,
+                    result: {msg: "something is missing"}
+                };
+            }
+            
+            if (resultU.rowCount == 0)
+            {
+                return {
+                    status: 500,
+                    result: {msg: "The update failed"}
+                };
+            }
+            return {
+                status: 200,
+                result: {
+                    msg: "You posted!", HpDamage
+                }
+            };
+        }
+    } catch (err){
+    console.log(err);
+    return { status: 500, result: err};
+    }
 }
 
 /*

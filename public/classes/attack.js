@@ -35,6 +35,17 @@ class attackCreator{
         }
         
     }
+    VerticalAttack(board)
+    {
+        let collum = CollumCalculator(this.parcel.parcelId);
+        for(let i = 1; i < board.length; i++)
+        {
+            if(CollumCalculator(board[i].parcelId) == collum)
+            {
+                damageParcels.push(board[i]);
+            }
+        }
+    }
     
 }
 function AttackDisplayer()

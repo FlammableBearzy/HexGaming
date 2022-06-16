@@ -52,8 +52,8 @@ router.post('/:id/ResetCooldowns', async function(req, res, next){
 
 router.post('/:id/PlaceTraps', async function(req, res, next)
 {
-    let id = req.params.id;
-    let roomID = req.body.roomID;
+    let id = req.signedCookies.userId;
+    let roomID = req.signedCookies.roomId;
     let attackID = req.body.attackID;
     let parcelID = req.body.parcelID;
     console.log(`The player ${id} in the game ${roomID} is placing the trap ${attackID} on the parsel ${parcelID}`);
@@ -63,8 +63,8 @@ router.post('/:id/PlaceTraps', async function(req, res, next)
 
 router.post('/id/RemoveTraps', async function(req, res, next)
 {
-    let id = req.params.id;
-    let roomID = req.body.roomID;
+    let id = req.signedCookies.userId;
+    let roomID = req.signedCookies.roomId;
     let attackID = req.body.attackID;
     let parcelID = req.body.parcelID;
     console.log(`The player ${id} in the game ${roomID} is placing the trap ${attackID} on the parsel ${parcelID}`);

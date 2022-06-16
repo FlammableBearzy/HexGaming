@@ -107,7 +107,19 @@ class Attacks {
         if(x > this.x && x < (this.x + this.width) && y > this.y && y < (this.y + this.height))
         {
             console.log("This has been pressed " + this.action);
-            Attacks.UpdateActionsPerRound(2, 1, 5)
+            switch (this.action)
+            {
+                case 1:
+                    Attacks.PlaceTrapOnFloor(1,2,1,5);
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+            }
+
         }    
     };
 
@@ -117,7 +129,7 @@ class Attacks {
         if (trapPlaced != undefined)
         {
             console.log("Inside first if of 'Place Trap'");
-            
+
         }
     }
 }

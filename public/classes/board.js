@@ -58,3 +58,18 @@ function RowCalculator(parcelId)
   else currentRow = parcelId / boardLenght ;
   return currentRow;
 }
+function CollumCalculator(parcelId)
+{
+    let boardLenght = 6;
+    let boardHeight = 3;
+    let currentCollum = null;
+    
+    currentCollum = (((parcelId % boardLenght) / boardHeight));
+    
+    return currentCollum;
+}
+
+function BombCalculator(parcelId)
+{
+  return;
+}

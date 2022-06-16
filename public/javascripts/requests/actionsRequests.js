@@ -123,7 +123,7 @@ async function play(direction, cookie){
 async function postTrapPlacing(playerId, roomId, attackId, parcelId)
 {
     try {
-        const response = await fetch(`/api/actions/${playerId}/PlaceTraps`,
+        const response = await fetch(`/api/actions/11/PlaceTraps`,
         {
             method: "POST",
             headers: {"Content-Type" : "application/json"},
