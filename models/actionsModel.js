@@ -127,7 +127,10 @@ module.exports.getAttackInGameByPlayer = async function(id)
             let attInGame = result.rows;
             return { status: 200, result: attInGame };
         } else {
-            return { status: 404, result: {msg: "There's no player with that ID"}}
+            //INSERT CARDS HERE if player doesnt have them
+            let sqlI = `insert into attackInGame (att_IG_action_id, att_IG_player_id, att_IG_cooldown) values (1, $1, 6), (2, $1, 6), (3, $1, 10)`;
+            let resultI = await pool.query(sqlI, [id]);
+            return { status: 200, result: {msg: "The player didnt have a deck, creating it"}}
         }
 
     } catch (err){
@@ -593,8 +596,20 @@ async function Damage(id){
 }
 
 /*
-Delete card from Trap after being activated
+Todo:
 
-postTrapRemover
+Sync attacks with turns. Those being: 
+    Update cards cooldown, 
+    Update Cards activation turns, 
+    Make them use a turn when placed on the board.
+
+Check if damage is well applied.
+When game starts, insert a new hand to the player
+
+Visually show if the hand card is on cooldown,
+Sync attack visuals with trigger.
+
+
+
 
 */
