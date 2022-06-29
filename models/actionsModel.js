@@ -604,15 +604,14 @@ async function AttacksCooldownCounter(id, actionId)
     let result = await pool.query(sqlAU, [id, actionId]);
     let CooldownCounter = result.rows;
 
-    //If my att_ig_cooldown is = 0 then
-    //  PlayableBool = true;
-    //  No update;
-
-    //Else Update
-
-        if (!CooldownCounter){
-            return { status: 404, result: {msg: "There's nothing with those IDs"} }
+    if (!CooldownCounter){
+        return { status: 404, result: {msg: "There's nothing with those IDs"} }
+    } else {
+        if(CooldownCounter[0].att_ig_cooldown >= 0)
+        {
+            PlayableBool = true;
         } else {
+            PlayableBool = false;
             let sqlU = "Update AttackInGame set att_ig_cooldown = att_ig_cooldown - 1 where att_ig_player_id = $1 and att_ig_action_id = $2";
             let resultU = await pool.query(sqlU, [id, actionId]);
 
@@ -630,6 +629,14 @@ async function AttacksCooldownCounter(id, actionId)
 
             return { status: 200, result: {msg: "You posted!", CooldownCounter} };
         }
+    }
+    //If my att_ig_cooldown is = 0 then
+    //  PlayableBool = true;
+    //  No update;
+
+    //Else Update
+
+      
     } catch (err){
         console.log(err);
         return { status: 500, result: err};
