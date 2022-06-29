@@ -292,7 +292,7 @@ module.exports.postTrapPlacing = async function(id, room, attack, parcel) {
             let result2 = await pool.query(sql2, [id]);
             if(id == result2.rows[0].room_lastturnplayer_id )
             {
-                let sqlIn = `insert into traps (trap_player_id, trap_room_id, trap_attack_id, trap_parsel_id, trap_activation) values ($1, $2, $3, $4, 0)`;
+                let sqlIn = `insert into traps (trap_player_id, trap_room_id, trap_attack_id, trap_parsel_id, trap_activation) values ($1, $2, $3, $4, 3)`;
                 let result = await pool.query(sqlIn, [id, room, attack, parcel]);
                 console.log(id);
                 console.log(room);
@@ -595,6 +595,37 @@ async function Damage(id){
     }
 }
 
+async function AttacksActivationCounter(id, roomId, actionId)
+{
+    try{
+    let sqlAT = `select * from traps where trap_player_id = $1 and trap_room_id = $2 and trap_attack_id = $3`;
+    let result = await pool.query(sqlAT, [id, roomId, actionId]);
+    let ActivationCounter = result.rows;
+        if (!ActivationCounter){
+            return { status: 404, result: {msg: "There's nothing with those IDs"} }
+        } else {
+            let sqlU = "Update traps set trap_activation = trap_activation - 1 where trap_player_id = $1 and trap_room_id = $2 and trap_attack_id = $3";
+            let resultU = await pool.query(sqlU, [id, roomId, actionId]);
+
+            if (resultU == undefined)
+            {
+                return { status: 404, result: {msg: "Something is missing"} };
+            }
+
+            if (resultU.rowCount == 0)
+            {
+                return { status: 500, result: {msg: "The update failed"} };
+            }
+
+            return { status: 200, result: {msg: "You posted!", ActivationCounter} };
+        }
+    }
+    catch (err){
+        console.log(err);
+        return { status: 500, result: err};
+    }
+}
+
 /*
 Todo:
 
@@ -608,8 +639,6 @@ When game starts, insert a new hand to the player
 
 Visually show if the hand card is on cooldown,
 Sync attack visuals with trigger.
-
-
 
 
 */
