@@ -595,6 +595,36 @@ async function Damage(id){
     }
 }
 
+async function AttacksCooldownCounter(id, actionId)
+{
+    try{
+    let splAU = `select * from AttackInGame where att_ig_player_id = $1 and att_ig_action_id = $2`;
+    let result = await pool.query(sqlAU, [id, actionId]);
+    let CooldownCounter = result.rows;
+        if (!ActivationCounter){
+            return { status: 404, result: {msg: "There's nothing with those IDs"} }
+        } else {
+            let sqlU = "Update AttackInGame set att_ig_cooldown = att_ig_cooldown - 1 where att_ig_player_id = $1 and att_ig_action_id = $2";
+            let resultU = await pool.query(sqlU, [id, actionId]);
+
+            if (resultU == undefined)
+            {
+                return { status: 404, result: {msg: "Something is missing"} };
+            }
+
+            if (resultU.rowCount == 0)
+            {
+                return { status: 500, result: {msg: "The update failed"} };
+            }
+
+            return { status: 200, result: {msg: "You posted!", CooldownCounter} };
+        }
+    } catch (err){
+        console.log(err);
+        return { status: 500, result: err};
+    }
+}
+
 async function AttacksActivationCounter(id, roomId, actionId)
 {
     try{
