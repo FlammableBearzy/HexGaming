@@ -569,6 +569,7 @@ async function Damage(id){
             let resultU = await pool.query(sqlU, [id]);
             if (resultU == undefined)
             {
+                console.log("Error 404");
                 return {
                     status: 404,
                     result: {msg: "something is missing"}
@@ -577,6 +578,7 @@ async function Damage(id){
             
             if (resultU.rowCount == 0)
             {
+                console.log("Error 500");
                 return {
                     status: 500,
                     result: {msg: "The update failed"}
@@ -601,7 +603,14 @@ async function AttacksCooldownCounter(id, actionId)
     let splAU = `select * from AttackInGame where att_ig_player_id = $1 and att_ig_action_id = $2`;
     let result = await pool.query(sqlAU, [id, actionId]);
     let CooldownCounter = result.rows;
-        if (!ActivationCounter){
+
+    //If my att_ig_cooldown is = 0 then
+    //  PlayableBool = true;
+    //  No update;
+
+    //Else Update
+
+        if (!CooldownCounter){
             return { status: 404, result: {msg: "There's nothing with those IDs"} }
         } else {
             let sqlU = "Update AttackInGame set att_ig_cooldown = att_ig_cooldown - 1 where att_ig_player_id = $1 and att_ig_action_id = $2";
@@ -609,11 +618,13 @@ async function AttacksCooldownCounter(id, actionId)
 
             if (resultU == undefined)
             {
+                console.log("Error 404");
                 return { status: 404, result: {msg: "Something is missing"} };
             }
 
             if (resultU.rowCount == 0)
             {
+                console.log("Error 500");
                 return { status: 500, result: {msg: "The update failed"} };
             }
 
@@ -639,11 +650,13 @@ async function AttacksActivationCounter(id, roomId, actionId)
 
             if (resultU == undefined)
             {
+                console.log("Error 404");
                 return { status: 404, result: {msg: "Something is missing"} };
             }
 
             if (resultU.rowCount == 0)
             {
+                console.log("Error 500");
                 return { status: 500, result: {msg: "The update failed"} };
             }
 
@@ -669,6 +682,9 @@ When game starts, insert a new hand to the player
 
 Visually show if the hand card is on cooldown,
 Sync attack visuals with trigger.
+
+If cooldown is = 0 -> card becomes playable
+If cooldown is 0 and the card is played then i need to reset the card back to its normal cooldown
 
 
 */
