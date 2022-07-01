@@ -35,6 +35,18 @@ class attackCreator{
         }
         
     }
+    BombAttack(board)
+    {
+            damageParcels.push(board[this.parcel.parcelId]);
+            if(this.parcel.parcelId != 6 && this.parcel.parcelId != 12 && this.parcel.parcelId != 18)
+            damageParcels.push(board[this.parcel.parcelId+1]);
+            if(this.parcel.parcelId != 1 && this.parcel.parcelId != 7 && this.parcel.parcelId != 13)
+            damageParcels.push(board[this.parcel.parcelId -1]);
+            if(this.parcel.parcelId < 13)
+            damageParcels.push(board[this.parcel.parcelId +6]);
+            if(this.parcel.parcelId > 6)
+            damageParcels.push(board[this.parcel.parcelId - 6]);
+    }
     VerticalAttack(board)
     {
         let collum = CollumCalculator(this.parcel.parcelId);

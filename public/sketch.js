@@ -74,6 +74,7 @@ function setup() {
   player[2] = new playerCreator(newBoard[18], 150, "Red", 2);
   attack[1] = new attackCreator(newBoard[3], 150, "Green", 1)
   attack[2] = new attackCreator(newBoard[3], 150, "Red", 2)
+  attack[3] = new attackCreator(newBoard[8], 150, "Green", 2)
   //turnsClass = new turn(1200,50, 200, player);
   //Movement.StartGame(0, newBoard);
 
@@ -107,7 +108,8 @@ function setup() {
 
   room = RoomManager.getRoom();
   //attack[1].HorizontalAttack(newBoard);
-  attack[2].VerticalAttack(newBoard);
+  //attack[2].VerticalAttack(newBoard);
+  attack[3].BombAttack(newBoard);
 
 }
 
